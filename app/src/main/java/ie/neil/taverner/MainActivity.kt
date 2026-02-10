@@ -50,7 +50,11 @@ class MainActivity : AppCompatActivity() {
     ) { uri ->
         if (uri != null) {
             val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            contentResolver.takePersistableUriPermission(uri, flags)
+            try {
+                contentResolver.takePersistableUriPermission(uri, flags)
+            } catch (ex: SecurityException) {
+                // Some providers don't grant persistable permissions; continue with runtime access.
+            }
             store.saveFolder(uri)
             updateFolderLabel(uri)
             loadTracks(uri)
@@ -63,8 +67,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val permissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { /* SAF access still works even if permission denied */ }
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        // SAF access still works even if permission denied.
+        maybeStartPlaybackService()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         binding.stopButton.setOnClickListener { controller?.stop() }
         binding.nextButton.setOnClickListener { controller?.seekToNext() }
 
-        ensureMediaPermission()
+        ensureRuntimePermissions()
 
         store.loadFolder()?.let { uri ->
             updateFolderLabel(uri)
@@ -90,8 +97,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        startPlaybackService()
-        connectController()
+        maybeStartPlaybackService()
     }
 
     override fun onStop() {
@@ -105,6 +111,14 @@ class MainActivity : AppCompatActivity() {
     private fun startPlaybackService() {
         val intent = Intent(this, PlaybackService::class.java)
         ContextCompat.startForegroundService(this, intent)
+    }
+
+    private fun maybeStartPlaybackService() {
+        if (!hasNotificationPermission() || controller != null) {
+            return
+        }
+        startPlaybackService()
+        connectController()
     }
 
     private fun connectController() {
@@ -147,14 +161,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun ensureMediaPermission() {
-        val permission = if (Build.VERSION.SDK_INT >= 33) {
-            Manifest.permission.READ_MEDIA_AUDIO
+    private fun ensureRuntimePermissions() {
+        val permissions = mutableListOf<String>()
+        if (Build.VERSION.SDK_INT >= 33) {
+            permissions.add(Manifest.permission.READ_MEDIA_AUDIO)
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
         } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            permissionLauncher.launch(permission)
+        val needsRequest = permissions.any { permission ->
+            ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
         }
+        if (needsRequest) {
+            permissionLauncher.launch(permissions.toTypedArray())
+        }
+    }
+
+    private fun hasNotificationPermission(): Boolean {
+        return Build.VERSION.SDK_INT < 33 ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
     }
 }

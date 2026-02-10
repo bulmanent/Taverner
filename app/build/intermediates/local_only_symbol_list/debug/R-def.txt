@@ -1,0 +1,24 @@
+R_DEF: Internal format may change without notice
+local
+color taverner_bg
+color taverner_primary
+color taverner_secondary
+drawable ic_launcher
+id folderText
+id nextButton
+id pauseButton
+id playButton
+id selectFolderButton
+id stopButton
+id trackList
+id trackText
+layout activity_main
+string app_name
+string next
+string no_folder
+string no_track
+string pause
+string play
+string select_folder
+string stop
+style Theme.Taverner
