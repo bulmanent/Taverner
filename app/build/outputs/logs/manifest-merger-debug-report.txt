@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-54:12
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-54:12
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-54:12
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-54:12
 MERGED from [androidx.databinding:viewbinding:8.2.2] /home/neil/.gradle/caches/transforms-3/b93974932ecdca12f6bb7955c79b1b88/transformed/viewbinding-8.2.2/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.11.0] /home/neil/.gradle/caches/transforms-3/3c6da16fc08c5e7b7caed394bbbfefaa/transformed/material-1.11.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /home/neil/.gradle/caches/transforms-3/2fd0cb4fe98f737439d366f57b52369e/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
@@ -71,31 +71,63 @@ MERGED from [androidx.print:print:1.0.0] /home/neil/.gradle/caches/transforms-3/
 		INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:11-69
+queries
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:3:5-19:15
+intent#action:name:androidx.media3.session.MediaSessionService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:4:9-6:18
+action#androidx.media3.session.MediaSessionService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:13-82
+	android:name
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:21-79
+intent#action:name:androidx.media3.session.MediaLibraryService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:9-9:18
+action#androidx.media3.session.MediaLibraryService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:8:13-82
+	android:name
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:8:21-79
+intent#action:name:androidx.media3.session.MediaBrowserService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:10:9-12:18
+action#androidx.media3.session.MediaBrowserService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:11:13-82
+	android:name
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:11:21-79
+intent#action:name:android.media.browse.MediaBrowserService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:13:9-15:18
+action#android.media.browse.MediaBrowserService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:14:13-79
+	android:name
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:14:21-76
+intent#action:name:android.media.browse.MediaBrowserServiceCompat
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:16:9-18:18
+action#android.media.browse.MediaBrowserServiceCompat
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:17:13-85
+	android:name
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:17:21-82
 uses-permission#android.permission.FOREGROUND_SERVICE
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:3:5-77
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:5-77
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:3:22-74
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:22-74
 uses-permission#android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:4:5-92
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:5-92
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:4:22-89
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:22-89
 uses-permission#android.permission.POST_NOTIFICATIONS
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:5-77
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:23:5-77
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:22-74
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:23:22-74
 uses-permission#android.permission.READ_MEDIA_AUDIO
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:6:5-75
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:24:5-75
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:6:22-72
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:24:22-72
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:5-107
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:25:5-107
 	android:maxSdkVersion
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:78-104
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:25:78-104
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:22-77
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:25:22-77
 application
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:9:5-35:19
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:9:5-35:19
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:27:5-53:19
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:27:5-53:19
 MERGED from [com.google.android.material:material:1.11.0] /home/neil/.gradle/caches/transforms-3/3c6da16fc08c5e7b7caed394bbbfefaa/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] /home/neil/.gradle/caches/transforms-3/3c6da16fc08c5e7b7caed394bbbfefaa/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/neil/.gradle/caches/transforms-3/fffb3d29cce5e588feee309082b11d5f/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -117,47 +149,43 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/neil/.gradle/caches/t
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:14:9-35
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:32:9-35
 	android:label
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:11:9-41
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:29:9-41
 	android:roundIcon
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:13:9-50
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:9-50
 	android:icon
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:12:9-45
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:30:9-45
 	android:allowBackup
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:10:9-35
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:28:9-35
 	android:theme
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:15:9-46
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:33:9-46
 activity#ie.neil.taverner.MainActivity
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:17:9-24:20
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:35:9-42:20
 	android:exported
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:19:13-36
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:37:13-36
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:18:13-41
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:36:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:20:13-23:29
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:38:13-41:29
 action#android.intent.action.MAIN
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:17-69
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:39:17-69
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:25-66
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:39:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:17-77
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:40:17-77
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:27-74
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:40:27-74
 service#ie.neil.taverner.PlaybackService
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:26:9-33:19
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:44:9-51:19
 	android:exported
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:28:13-37
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:46:13-36
 	android:foregroundServiceType
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:29:13-58
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:47:13-58
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:27:13-60
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:45:13-60
 intent-filter#action:name:androidx.media3.session.MediaSessionService
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:30:13-32:29
-action#androidx.media3.session.MediaSessionService
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:17-86
-	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:25-83
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:48:13-50:29
 uses-sdk
 INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml

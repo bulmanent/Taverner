@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private var controllerFuture: ListenableFuture<MediaController>? = null
     private var controller: MediaController? = null
     private var pendingFolderUri: Uri? = null
+    private var currentFolderUri: Uri? = null
 
     private val playerListener = object : Player.Listener {
         override fun onMediaItemTransition(mediaItem: androidx.media3.common.MediaItem?, reason: Int) {
@@ -57,12 +58,14 @@ class MainActivity : AppCompatActivity() {
                 // Some providers don't grant persistable permissions; continue with runtime access.
             }
             store.saveFolder(uri)
+            store.clearTracks()
             updateFolderLabel(uri)
-            loadTracks(uri)
+            currentFolderUri = uri
+            loadTracks(uri, forceRefresh = true)
             if (controller == null) {
                 pendingFolderUri = uri
             } else {
-                sendFolderToService(uri)
+                sendFolderToService(uri, forceRefresh = true)
             }
         }
     }
@@ -83,6 +86,12 @@ class MainActivity : AppCompatActivity() {
         binding.trackList.adapter = adapter
 
         binding.selectFolderButton.setOnClickListener { openTreeLauncher.launch(null) }
+        binding.refreshButton.setOnClickListener {
+            currentFolderUri?.let { uri ->
+                loadTracks(uri, forceRefresh = true)
+                sendFolderToService(uri, forceRefresh = true)
+            }
+        }
         binding.playButton.setOnClickListener { controller?.play() }
         binding.pauseButton.setOnClickListener { controller?.pause() }
         binding.stopButton.setOnClickListener { controller?.stop() }
@@ -92,6 +101,7 @@ class MainActivity : AppCompatActivity() {
 
         store.loadFolder()?.let { uri ->
             updateFolderLabel(uri)
+            currentFolderUri = uri
             loadTracks(uri)
         }
     }
@@ -130,16 +140,19 @@ class MainActivity : AppCompatActivity() {
             controller?.addListener(playerListener)
             updateCurrentTrack()
             pendingFolderUri?.let { pending ->
-                sendFolderToService(pending)
+                sendFolderToService(pending, forceRefresh = true)
                 pendingFolderUri = null
             }
         }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun sendFolderToService(uri: Uri) {
+    private fun sendFolderToService(uri: Uri, forceRefresh: Boolean) {
         val currentController = controller ?: return
         val command = SessionCommand(PlaybackService.CMD_SET_FOLDER, Bundle.EMPTY)
-        val args = Bundle().apply { putString(PlaybackService.EXTRA_TREE_URI, uri.toString()) }
+        val args = Bundle().apply {
+            putString(PlaybackService.EXTRA_TREE_URI, uri.toString())
+            putBoolean(PlaybackService.EXTRA_FORCE_REFRESH, forceRefresh)
+        }
         currentController.sendCustomCommand(command, args)
     }
 
@@ -159,9 +172,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadTracks(uri: Uri) {
+    private fun loadTracks(uri: Uri, forceRefresh: Boolean = false) {
         lifecycleScope.launch(Dispatchers.IO) {
-            val tracks = AudioScanner.scan(this@MainActivity, uri)
+            val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
+            val tracks = if (cached.isNotEmpty()) {
+                cached
+            } else {
+                val scanned = AudioScanner.scan(this@MainActivity, uri)
+                if (scanned.isNotEmpty()) {
+                    store.saveTracks(uri, scanned)
+                }
+                scanned
+            }
             withContext(Dispatchers.Main) {
                 adapter.tracks = tracks
                 updateCurrentTrack()

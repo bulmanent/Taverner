@@ -88,14 +88,29 @@ class PlaybackService : MediaSessionService() {
     private fun restoreFromStore() {
         val folder = store.loadFolder() ?: return
         val state = store.loadState()
-        loadPlaylist(folder, state.index, state.position, state.playWhenReady)
+        loadPlaylist(folder, state.index, state.position, state.playWhenReady, forceRefresh = false)
     }
 
-    private fun loadPlaylist(folder: Uri, index: Int, position: Long, playWhenReady: Boolean) {
+    private fun loadPlaylist(
+        folder: Uri,
+        index: Int,
+        position: Long,
+        playWhenReady: Boolean,
+        forceRefresh: Boolean
+    ) {
         loadJob?.cancel()
         loadJob = serviceScope.launch {
-            val tracks = withContext(Dispatchers.IO) {
-                AudioScanner.scan(this@PlaybackService, folder)
+            val cached = if (forceRefresh) emptyList() else store.loadTracks(folder)
+            val tracks = if (cached.isNotEmpty()) {
+                cached
+            } else {
+                withContext(Dispatchers.IO) {
+                    AudioScanner.scan(this@PlaybackService, folder)
+                }.also { scanned ->
+                    if (scanned.isNotEmpty()) {
+                        store.saveTracks(folder, scanned)
+                    }
+                }
             }
             if (tracks.isEmpty()) {
                 player.clearMediaItems()
@@ -154,7 +169,8 @@ class PlaybackService : MediaSessionService() {
                 if (uriString != null) {
                     val folder = Uri.parse(uriString)
                     store.saveFolder(folder)
-                    loadPlaylist(folder, 0, 0, true)
+                    val forceRefresh = args.getBoolean(EXTRA_FORCE_REFRESH, false)
+                    loadPlaylist(folder, 0, 0, true, forceRefresh)
                 }
                 return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
             }
@@ -165,6 +181,7 @@ class PlaybackService : MediaSessionService() {
     companion object {
         const val CMD_SET_FOLDER = "taverner_set_folder"
         const val EXTRA_TREE_URI = "extra_tree_uri"
+        const val EXTRA_FORCE_REFRESH = "extra_force_refresh"
         private const val SAVE_INTERVAL_MS = 5000L
     }
 }

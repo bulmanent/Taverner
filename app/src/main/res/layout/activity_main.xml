@@ -33,6 +33,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/select_folder" />
+
+        <Button
+            android:id="@+id/refreshButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/refresh" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,12 +63,18 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/pause" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/stopButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/stop" />
 

@@ -8,157 +8,191 @@
 8        android:minSdkVersion="30"
 9        android:targetSdkVersion="34" />
 10
-11    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-11-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:3:5-77
-11-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:3:22-74
-12    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-12-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:4:5-92
-12-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:4:22-89
-13    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-13-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:5-77
-13-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:22-74
-14    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-14-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:6:5-75
-14-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:6:22-72
-15    <uses-permission
-15-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:5-107
-16        android:name="android.permission.READ_EXTERNAL_STORAGE"
-16-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:22-77
-17        android:maxSdkVersion="32" />
-17-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:78-104
-18    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-18-->[androidx.media3:media3-exoplayer:1.3.1] /home/neil/.gradle/caches/transforms-3/324f80b400966eacd621a1136400f6f6/transformed/media3-exoplayer-1.3.1/AndroidManifest.xml:22:5-79
-18-->[androidx.media3:media3-exoplayer:1.3.1] /home/neil/.gradle/caches/transforms-3/324f80b400966eacd621a1136400f6f6/transformed/media3-exoplayer-1.3.1/AndroidManifest.xml:22:22-76
-19
-20    <permission
-20-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
-21        android:name="ie.neil.taverner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-21-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
-22        android:protectionLevel="signature" />
-22-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
-23
-24    <uses-permission android:name="ie.neil.taverner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-24-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
-24-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
-25
-26    <application
-26-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:9:5-35:19
-27        android:allowBackup="true"
-27-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:10:9-35
-28        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-28-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
-29        android:debuggable="true"
-30        android:extractNativeLibs="false"
-31        android:icon="@drawable/ic_launcher"
-31-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:12:9-45
-32        android:label="@string/app_name"
-32-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:11:9-41
-33        android:roundIcon="@drawable/ic_launcher"
-33-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:13:9-50
-34        android:supportsRtl="true"
-34-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:14:9-35
-35        android:testOnly="true"
-36        android:theme="@style/Theme.Taverner" >
-36-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:15:9-46
-37        <activity
-37-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:17:9-24:20
-38            android:name="ie.neil.taverner.MainActivity"
-38-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:18:13-41
-39            android:exported="true" >
-39-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:19:13-36
-40            <intent-filter>
-40-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:20:13-23:29
-41                <action android:name="android.intent.action.MAIN" />
-41-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:17-69
-41-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:25-66
-42
-43                <category android:name="android.intent.category.LAUNCHER" />
-43-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:17-77
-43-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:27-74
-44            </intent-filter>
-45        </activity>
-46
-47        <service
-47-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:26:9-33:19
-48            android:name="ie.neil.taverner.PlaybackService"
-48-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:27:13-60
-49            android:exported="false"
-49-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:28:13-37
-50            android:foregroundServiceType="mediaPlayback" >
-50-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:29:13-58
-51            <intent-filter>
-51-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:30:13-32:29
-52                <action android:name="androidx.media3.session.MediaSessionService" />
-52-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:17-86
-52-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:25-83
-53            </intent-filter>
-54        </service>
-55
-56        <provider
-56-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
-57            android:name="androidx.startup.InitializationProvider"
-57-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
-58            android:authorities="ie.neil.taverner.androidx-startup"
-58-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
-59            android:exported="false" >
-59-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
-60            <meta-data
-60-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
-61                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-61-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
-62                android:value="androidx.startup" />
-62-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
-63            <meta-data
-63-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/neil/.gradle/caches/transforms-3/01096349b0936ba7f741e909295c017b/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:29:13-31:52
-64                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-64-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/neil/.gradle/caches/transforms-3/01096349b0936ba7f741e909295c017b/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:30:17-78
-65                android:value="androidx.startup" />
-65-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/neil/.gradle/caches/transforms-3/01096349b0936ba7f741e909295c017b/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:31:17-49
-66            <meta-data
-66-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
-67                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-67-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
-68                android:value="androidx.startup" />
-68-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
-69        </provider>
-70
-71        <receiver
-71-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
-72            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-72-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
-73            android:directBootAware="false"
-73-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
-74            android:enabled="true"
-74-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
-75            android:exported="true"
-75-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
-76            android:permission="android.permission.DUMP" >
-76-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
-77            <intent-filter>
-77-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
-78                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-78-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
-78-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
-79            </intent-filter>
-80            <intent-filter>
-80-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
-81                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-81-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
-81-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
-82            </intent-filter>
-83            <intent-filter>
-83-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
-84                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
-84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
-85            </intent-filter>
-86            <intent-filter>
-86-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
-87                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-87-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
-87-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
-88            </intent-filter>
-89        </receiver>
-90    </application>
-91
-92</manifest>
+11    <queries>
+11-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:3:5-19:15
+12        <intent>
+12-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:4:9-6:18
+13            <action android:name="androidx.media3.session.MediaSessionService" />
+13-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:13-82
+13-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:21-79
+14        </intent>
+15        <intent>
+15-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:9-9:18
+16            <action android:name="androidx.media3.session.MediaLibraryService" />
+16-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:8:13-82
+16-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:8:21-79
+17        </intent>
+18        <intent>
+18-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:10:9-12:18
+19            <action android:name="androidx.media3.session.MediaBrowserService" />
+19-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:11:13-82
+19-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:11:21-79
+20        </intent>
+21        <intent>
+21-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:13:9-15:18
+22            <action android:name="android.media.browse.MediaBrowserService" />
+22-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:14:13-79
+22-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:14:21-76
+23        </intent>
+24        <intent>
+24-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:16:9-18:18
+25            <action android:name="android.media.browse.MediaBrowserServiceCompat" />
+25-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:17:13-85
+25-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:17:21-82
+26        </intent>
+27    </queries>
+28
+29    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+29-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:5-77
+29-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:21:22-74
+30    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+30-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:5-92
+30-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:22-89
+31    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+31-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:23:5-77
+31-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:23:22-74
+32    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+32-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:24:5-75
+32-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:24:22-72
+33    <uses-permission
+33-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:25:5-107
+34        android:name="android.permission.READ_EXTERNAL_STORAGE"
+34-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:25:22-77
+35        android:maxSdkVersion="32" />
+35-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:25:78-104
+36    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+36-->[androidx.media3:media3-exoplayer:1.3.1] /home/neil/.gradle/caches/transforms-3/324f80b400966eacd621a1136400f6f6/transformed/media3-exoplayer-1.3.1/AndroidManifest.xml:22:5-79
+36-->[androidx.media3:media3-exoplayer:1.3.1] /home/neil/.gradle/caches/transforms-3/324f80b400966eacd621a1136400f6f6/transformed/media3-exoplayer-1.3.1/AndroidManifest.xml:22:22-76
+37
+38    <permission
+38-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+39        android:name="ie.neil.taverner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+39-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+40        android:protectionLevel="signature" />
+40-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
+41
+42    <uses-permission android:name="ie.neil.taverner.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+42-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+42-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+43
+44    <application
+44-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:27:5-53:19
+45        android:allowBackup="true"
+45-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:28:9-35
+46        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+46-->[androidx.core:core:1.12.0] /home/neil/.gradle/caches/transforms-3/440a64c1659b3784956be1ef27019da1/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
+47        android:debuggable="true"
+48        android:extractNativeLibs="false"
+49        android:icon="@drawable/ic_launcher"
+49-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:30:9-45
+50        android:label="@string/app_name"
+50-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:29:9-41
+51        android:roundIcon="@drawable/ic_launcher"
+51-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:9-50
+52        android:supportsRtl="true"
+52-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:32:9-35
+53        android:testOnly="true"
+54        android:theme="@style/Theme.Taverner" >
+54-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:33:9-46
+55        <activity
+55-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:35:9-42:20
+56            android:name="ie.neil.taverner.MainActivity"
+56-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:36:13-41
+57            android:exported="true" >
+57-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:37:13-36
+58            <intent-filter>
+58-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:38:13-41:29
+59                <action android:name="android.intent.action.MAIN" />
+59-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:39:17-69
+59-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:39:25-66
+60
+61                <category android:name="android.intent.category.LAUNCHER" />
+61-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:40:17-77
+61-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:40:27-74
+62            </intent-filter>
+63        </activity>
+64
+65        <service
+65-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:44:9-51:19
+66            android:name="ie.neil.taverner.PlaybackService"
+66-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:45:13-60
+67            android:exported="true"
+67-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:46:13-36
+68            android:foregroundServiceType="mediaPlayback" >
+68-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:47:13-58
+69            <intent-filter>
+69-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:48:13-50:29
+70                <action android:name="androidx.media3.session.MediaSessionService" />
+70-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:13-82
+70-->/home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:5:21-79
+71            </intent-filter>
+72        </service>
+73
+74        <provider
+74-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+75            android:name="androidx.startup.InitializationProvider"
+75-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+76            android:authorities="ie.neil.taverner.androidx-startup"
+76-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+77            android:exported="false" >
+77-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+78            <meta-data
+78-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+79                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+79-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+80                android:value="androidx.startup" />
+80-->[androidx.emoji2:emoji2:1.2.0] /home/neil/.gradle/caches/transforms-3/40af677edc9e981bf1ec9bb11c8b1d32/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+81            <meta-data
+81-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/neil/.gradle/caches/transforms-3/01096349b0936ba7f741e909295c017b/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:29:13-31:52
+82                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+82-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/neil/.gradle/caches/transforms-3/01096349b0936ba7f741e909295c017b/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:30:17-78
+83                android:value="androidx.startup" />
+83-->[androidx.lifecycle:lifecycle-process:2.7.0] /home/neil/.gradle/caches/transforms-3/01096349b0936ba7f741e909295c017b/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:31:17-49
+84            <meta-data
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+85                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+85-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+86                android:value="androidx.startup" />
+86-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+87        </provider>
+88
+89        <receiver
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+90            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+90-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+91            android:directBootAware="false"
+91-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+92            android:enabled="true"
+92-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+93            android:exported="true"
+93-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+94            android:permission="android.permission.DUMP" >
+94-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+95            <intent-filter>
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+96                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+97            </intent-filter>
+98            <intent-filter>
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+99                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+100            </intent-filter>
+101            <intent-filter>
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+102                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+102-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+102-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+103            </intent-filter>
+104            <intent-filter>
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+105                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+105-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+105-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/neil/.gradle/caches/transforms-3/4dbbd11a74d28bd64c37893cccf57482/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+106            </intent-filter>
+107        </receiver>
+108    </application>
+109
+110</manifest>
