@@ -1,5 +1,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <queries>
+        <intent>
+            <action android:name="androidx.media3.session.MediaSessionService" />
+        </intent>
+        <intent>
+            <action android:name="androidx.media3.session.MediaLibraryService" />
+        </intent>
+        <intent>
+            <action android:name="androidx.media3.session.MediaBrowserService" />
+        </intent>
+        <intent>
+            <action android:name="android.media.browse.MediaBrowserService" />
+        </intent>
+        <intent>
+            <action android:name="android.media.browse.MediaBrowserServiceCompat" />
+        </intent>
+    </queries>
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -25,7 +43,7 @@
 
         <service
             android:name="ie.neil.taverner.PlaybackService"
-            android:exported="false"
+            android:exported="true"
             android:foregroundServiceType="mediaPlayback">
             <intent-filter>
                 <action android:name="androidx.media3.session.MediaSessionService" />

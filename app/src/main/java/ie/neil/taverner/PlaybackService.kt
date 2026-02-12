@@ -2,6 +2,9 @@ package ie.neil.taverner
 
 import android.net.Uri
 import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
 import androidx.media3.common.MediaItem
@@ -15,12 +18,29 @@ import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlaybackService : MediaSessionService() {
 
     private lateinit var player: ExoPlayer
     private lateinit var mediaSession: MediaSession
     private lateinit var store: PlaybackStore
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var loadJob: Job? = null
+
+    private val noisyReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context?, intent: Intent?) {
+            if (intent?.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+                player.pause()
+            }
+        }
+    }
 
     private val handler = Handler(Looper.getMainLooper())
     private val saveRunnable = object : Runnable {
@@ -44,6 +64,7 @@ class PlaybackService : MediaSessionService() {
         setMediaNotificationProvider(DefaultMediaNotificationProvider(this))
 
         player.addListener(PlayerEventListener())
+        registerReceiver(noisyReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
         restoreFromStore()
         handler.postDelayed(saveRunnable, SAVE_INTERVAL_MS)
     }
@@ -57,6 +78,8 @@ class PlaybackService : MediaSessionService() {
     override fun onDestroy() {
         handler.removeCallbacks(saveRunnable)
         persistNow()
+        unregisterReceiver(noisyReceiver)
+        serviceScope.cancel()
         mediaSession.release()
         player.release()
         super.onDestroy()
@@ -69,28 +92,33 @@ class PlaybackService : MediaSessionService() {
     }
 
     private fun loadPlaylist(folder: Uri, index: Int, position: Long, playWhenReady: Boolean) {
-        val tracks = AudioScanner.scan(this, folder)
-        if (tracks.isEmpty()) {
-            player.clearMediaItems()
-            return
-        }
+        loadJob?.cancel()
+        loadJob = serviceScope.launch {
+            val tracks = withContext(Dispatchers.IO) {
+                AudioScanner.scan(this@PlaybackService, folder)
+            }
+            if (tracks.isEmpty()) {
+                player.clearMediaItems()
+                return@launch
+            }
 
-        val items = tracks.map { track ->
-            MediaItem.Builder()
-                .setUri(track.uri)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(track.name)
-                        .build()
-                )
-                .build()
-        }
+            val items = tracks.map { track ->
+                MediaItem.Builder()
+                    .setUri(track.uri)
+                    .setMediaMetadata(
+                        MediaMetadata.Builder()
+                            .setTitle(track.name)
+                            .build()
+                    )
+                    .build()
+            }
 
-        val safeIndex = index.coerceIn(0, items.size - 1)
-        val safePosition = position.coerceAtLeast(0L)
-        player.setMediaItems(items, safeIndex, safePosition)
-        player.prepare()
-        player.playWhenReady = playWhenReady
+            val safeIndex = index.coerceIn(0, items.size - 1)
+            val safePosition = position.coerceAtLeast(0L)
+            player.setMediaItems(items, safeIndex, safePosition)
+            player.prepare()
+            player.playWhenReady = playWhenReady
+        }
     }
 
     private fun persistNow() {

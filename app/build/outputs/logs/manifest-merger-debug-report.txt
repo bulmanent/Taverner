@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-32:12
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-32:12
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-32:12
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-32:12
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:1:1-36:12
 MERGED from [androidx.databinding:viewbinding:8.2.2] /home/neil/.gradle/caches/transforms-3/b93974932ecdca12f6bb7955c79b1b88/transformed/viewbinding-8.2.2/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.11.0] /home/neil/.gradle/caches/transforms-3/3c6da16fc08c5e7b7caed394bbbfefaa/transformed/material-1.11.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /home/neil/.gradle/caches/transforms-3/2fd0cb4fe98f737439d366f57b52369e/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
@@ -94,8 +94,8 @@ ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7
 	android:name
 		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:7:22-77
 application
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:9:5-31:19
-INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:9:5-31:19
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:9:5-35:19
+INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:9:5-35:19
 MERGED from [com.google.android.material:material:1.11.0] /home/neil/.gradle/caches/transforms-3/3c6da16fc08c5e7b7caed394bbbfefaa/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] /home/neil/.gradle/caches/transforms-3/3c6da16fc08c5e7b7caed394bbbfefaa/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/neil/.gradle/caches/transforms-3/fffb3d29cce5e588feee309082b11d5f/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -145,13 +145,19 @@ ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:2
 	android:name
 		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:22:27-74
 service#ie.neil.taverner.PlaybackService
-ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:26:9-29:61
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:26:9-33:19
 	android:exported
 		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:28:13-37
 	android:foregroundServiceType
 		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:29:13-58
 	android:name
-		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:27:13-44
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:27:13-60
+intent-filter#action:name:androidx.media3.session.MediaSessionService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:30:13-32:29
+action#androidx.media3.session.MediaSessionService
+ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:17-86
+	android:name
+		ADDED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml:31:25-83
 uses-sdk
 INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/neil/StudioProjects/Taverner/app/src/main/AndroidManifest.xml

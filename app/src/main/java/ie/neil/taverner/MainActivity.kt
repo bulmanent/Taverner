@@ -17,6 +17,7 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionToken
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.common.util.concurrent.ListenableFuture
 import ie.neil.taverner.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -150,6 +151,12 @@ class MainActivity : AppCompatActivity() {
     private fun updateCurrentTrack() {
         val title = controller?.currentMediaItem?.mediaMetadata?.title?.toString()
         binding.trackText.text = title ?: getString(R.string.no_track)
+        val index = controller?.currentMediaItemIndex ?: RecyclerView.NO_POSITION
+        val changed = adapter.setCurrentIndex(index)
+        if (changed && index != RecyclerView.NO_POSITION) {
+            (binding.trackList.layoutManager as? LinearLayoutManager)
+                ?.scrollToPositionWithOffset(index, 0)
+        }
     }
 
     private fun loadTracks(uri: Uri) {
@@ -157,6 +164,7 @@ class MainActivity : AppCompatActivity() {
             val tracks = AudioScanner.scan(this@MainActivity, uri)
             withContext(Dispatchers.Main) {
                 adapter.tracks = tracks
+                updateCurrentTrack()
             }
         }
     }
