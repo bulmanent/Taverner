@@ -34,6 +34,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final Button playButton;
 
   @NonNull
+  public final Button refreshButton;
+
+  @NonNull
   public final Button selectFolderButton;
 
   @NonNull
@@ -47,13 +50,14 @@ public final class ActivityMainBinding implements ViewBinding {
 
   private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull TextView folderText,
       @NonNull Button nextButton, @NonNull Button pauseButton, @NonNull Button playButton,
-      @NonNull Button selectFolderButton, @NonNull Button stopButton,
+      @NonNull Button refreshButton, @NonNull Button selectFolderButton, @NonNull Button stopButton,
       @NonNull RecyclerView trackList, @NonNull TextView trackText) {
     this.rootView = rootView;
     this.folderText = folderText;
     this.nextButton = nextButton;
     this.pauseButton = pauseButton;
     this.playButton = playButton;
+    this.refreshButton = refreshButton;
     this.selectFolderButton = selectFolderButton;
     this.stopButton = stopButton;
     this.trackList = trackList;
@@ -111,6 +115,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.refreshButton;
+      Button refreshButton = ViewBindings.findChildViewById(rootView, id);
+      if (refreshButton == null) {
+        break missingId;
+      }
+
       id = R.id.selectFolderButton;
       Button selectFolderButton = ViewBindings.findChildViewById(rootView, id);
       if (selectFolderButton == null) {
@@ -136,7 +146,7 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((LinearLayout) rootView, folderText, nextButton, pauseButton,
-          playButton, selectFolderButton, stopButton, trackList, trackText);
+          playButton, refreshButton, selectFolderButton, stopButton, trackList, trackText);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

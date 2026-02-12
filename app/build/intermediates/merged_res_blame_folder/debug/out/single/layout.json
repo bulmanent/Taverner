@@ -2,5 +2,9 @@
     {
         "merged": "ie.neil.taverner.app-mergeDebugResources-40:/layout/activity_main.xml",
         "source": "ie.neil.taverner.app-main-43:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/neil/.gradle/daemon/8.5/ie.neil.taverner.app-mergeDebugResources-40:/layout/activity_main.xml",
+        "source": "/home/neil/.gradle/daemon/8.5/ie.neil.taverner.app-main-43:/layout/activity_main.xml"
     }
 ]

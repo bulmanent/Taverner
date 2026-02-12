@@ -3550,6 +3550,7 @@ int id progress_horizontal 0x7f0a017f
 int id radio 0x7f0a0180
 int id ratio 0x7f0a0181
 int id rectangles 0x7f0a0182
+int id refreshButton 0x7f0a020c
 int id report_drawn 0x7f0a0183
 int id reverseSawtooth 0x7f0a0184
 int id right 0x7f0a0185
@@ -4132,6 +4133,7 @@ int string path_password_eye_mask_visible 0x7f1000df
 int string path_password_strike_through 0x7f1000e0
 int string pause 0x7f1000e1
 int string play 0x7f1000e2
+int string refresh 0x7f1000ec
 int string search_menu_title 0x7f1000e3
 int string searchbar_scrolling_view_behavior 0x7f1000e4
 int string searchview_clear_text_content_description 0x7f1000e5

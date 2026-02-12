@@ -3551,6 +3551,7 @@ id progress_horizontal
 id radio
 id ratio
 id rectangles
+id refreshButton
 id report_drawn
 id reverseSawtooth
 id right
@@ -4133,6 +4134,7 @@ string path_password_eye_mask_visible
 string path_password_strike_through
 string pause
 string play
+string refresh
 string search_menu_title
 string searchbar_scrolling_view_behavior
 string searchview_clear_text_content_description

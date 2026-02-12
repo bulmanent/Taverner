@@ -8,6 +8,7 @@ id folderText
 id nextButton
 id pauseButton
 id playButton
+id refreshButton
 id selectFolderButton
 id stopButton
 id trackList
@@ -19,6 +20,7 @@ string no_folder
 string no_track
 string pause
 string play
+string refresh
 string select_folder
 string stop
 style Theme.Taverner

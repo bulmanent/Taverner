@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.content.res.ColorStateList
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var controller: MediaController? = null
     private var pendingFolderUri: Uri? = null
     private var currentFolderUri: Uri? = null
+    private var playButtonDefaultTint: ColorStateList? = null
 
     private val playerListener = object : Player.Listener {
         override fun onMediaItemTransition(mediaItem: androidx.media3.common.MediaItem?, reason: Int) {
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             updateCurrentTrack()
+            updatePlayButton(isPlaying)
         }
     }
 
@@ -96,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         binding.pauseButton.setOnClickListener { controller?.pause() }
         binding.stopButton.setOnClickListener { controller?.stop() }
         binding.nextButton.setOnClickListener { controller?.seekToNext() }
+        playButtonDefaultTint = binding.playButton.backgroundTintList
 
         ensureRuntimePermissions()
 
@@ -139,6 +143,7 @@ class MainActivity : AppCompatActivity() {
             controller = controllerFuture?.get()
             controller?.addListener(playerListener)
             updateCurrentTrack()
+            updatePlayButton(controller?.isPlaying == true)
             pendingFolderUri?.let { pending ->
                 sendFolderToService(pending, forceRefresh = true)
                 pendingFolderUri = null
@@ -172,20 +177,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updatePlayButton(isPlaying: Boolean) {
+        val highlight = ContextCompat.getColor(this, R.color.taverner_secondary)
+        binding.playButton.backgroundTintList = if (isPlaying) {
+            ColorStateList.valueOf(highlight)
+        } else {
+            playButtonDefaultTint
+        }
+    }
+
     private fun loadTracks(uri: Uri, forceRefresh: Boolean = false) {
         lifecycleScope.launch(Dispatchers.IO) {
             val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
-            val tracks = if (cached.isNotEmpty()) {
-                cached
-            } else {
-                val scanned = AudioScanner.scan(this@MainActivity, uri)
-                if (scanned.isNotEmpty()) {
-                    store.saveTracks(uri, scanned)
+            if (cached.isNotEmpty()) {
+                withContext(Dispatchers.Main) {
+                    adapter.tracks = cached
+                    updateCurrentTrack()
                 }
-                scanned
+                if (!forceRefresh) {
+                    return@launch
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    binding.loadingRow.visibility = android.view.View.VISIBLE
+                }
+            }
+
+            val scanned = AudioScanner.scan(this@MainActivity, uri)
+            if (scanned.isNotEmpty()) {
+                store.saveTracks(uri, scanned)
             }
             withContext(Dispatchers.Main) {
-                adapter.tracks = tracks
+                binding.loadingRow.visibility = android.view.View.GONE
+                adapter.tracks = scanned
                 updateCurrentTrack()
             }
         }

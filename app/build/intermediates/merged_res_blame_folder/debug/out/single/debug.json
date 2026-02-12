@@ -4,11 +4,11 @@
         "source": "/home/neil/.gradle/daemon/8.5/ie.neil.taverner.app-main-43:/layout/activity_main.xml"
     },
     {
-        "merged": "/home/neil/.gradle/daemon/8.5/ie.neil.taverner.app-merged_res-41:/drawable_ic_launcher.xml.flat",
-        "source": "/home/neil/.gradle/daemon/8.5/ie.neil.taverner.app-main-43:/drawable/ic_launcher.xml"
+        "merged": "ie.neil.taverner.app-merged_res-41:/layout_activity_main.xml.flat",
+        "source": "ie.neil.taverner.app-main-43:/layout/activity_main.xml"
     },
     {
-        "merged": "ie.neil.taverner.app-merged_res-41:/drawable_ic_launcher.xml.flat",
-        "source": "ie.neil.taverner.app-main-43:/drawable/ic_launcher.xml"
+        "merged": "/home/neil/.gradle/daemon/8.5/ie.neil.taverner.app-merged_res-41:/drawable_ic_launcher.xml.flat",
+        "source": "/home/neil/.gradle/daemon/8.5/ie.neil.taverner.app-main-43:/drawable/ic_launcher.xml"
     }
 ]

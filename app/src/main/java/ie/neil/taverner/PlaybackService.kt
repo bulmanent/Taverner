@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.media.AudioManager
-import android.os.Handler
-import android.os.Looper
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -42,14 +40,6 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val saveRunnable = object : Runnable {
-        override fun run() {
-            persistNow()
-            handler.postDelayed(this, SAVE_INTERVAL_MS)
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
         store = PlaybackStore(this)
@@ -66,7 +56,6 @@ class PlaybackService : MediaSessionService() {
         player.addListener(PlayerEventListener())
         registerReceiver(noisyReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
         restoreFromStore()
-        handler.postDelayed(saveRunnable, SAVE_INTERVAL_MS)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession = mediaSession
@@ -76,7 +65,6 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
-        handler.removeCallbacks(saveRunnable)
         persistNow()
         unregisterReceiver(noisyReceiver)
         serviceScope.cancel()
@@ -182,6 +170,5 @@ class PlaybackService : MediaSessionService() {
         const val CMD_SET_FOLDER = "taverner_set_folder"
         const val EXTRA_TREE_URI = "extra_tree_uri"
         const val EXTRA_FORCE_REFRESH = "extra_force_refresh"
-        private const val SAVE_INTERVAL_MS = 5000L
     }
 }
