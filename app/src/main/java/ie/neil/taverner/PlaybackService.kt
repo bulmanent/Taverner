@@ -175,7 +175,16 @@ class PlaybackService : MediaSessionService() {
                     val folder = Uri.parse(uriString)
                     store.saveFolder(folder)
                     val forceRefresh = args.getBoolean(EXTRA_FORCE_REFRESH, false)
-                    loadPlaylist(folder, 0, 0, true, forceRefresh)
+                    val startIndex = args.getInt(EXTRA_START_INDEX, 0)
+                    val startPositionMs = args.getLong(EXTRA_START_POSITION_MS, 0L)
+                    val playWhenReady = args.getBoolean(EXTRA_PLAY_WHEN_READY, true)
+                    loadPlaylist(
+                        folder = folder,
+                        index = startIndex,
+                        position = startPositionMs,
+                        playWhenReady = playWhenReady,
+                        forceRefresh = forceRefresh
+                    )
                 }
                 return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
             }
@@ -187,6 +196,9 @@ class PlaybackService : MediaSessionService() {
         const val CMD_SET_FOLDER = "taverner_set_folder"
         const val EXTRA_TREE_URI = "extra_tree_uri"
         const val EXTRA_FORCE_REFRESH = "extra_force_refresh"
+        const val EXTRA_START_INDEX = "extra_start_index"
+        const val EXTRA_START_POSITION_MS = "extra_start_position_ms"
+        const val EXTRA_PLAY_WHEN_READY = "extra_play_when_ready"
         private const val PERSIST_INTERVAL_MS = 15_000L
     }
 }

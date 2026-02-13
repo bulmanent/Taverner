@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var controller: MediaController? = null
     private var pendingFolderUri: Uri? = null
     private var currentFolderUri: Uri? = null
+    private var pendingPlayIndex: Int? = null
     private var playButtonDefaultTint: ColorStateList? = null
 
     private val playerListener = object : Player.Listener {
@@ -67,7 +68,12 @@ class MainActivity : AppCompatActivity() {
             if (controller == null) {
                 pendingFolderUri = uri
             } else {
-                sendFolderToService(uri, forceRefresh = true)
+                sendFolderToService(
+                    uri = uri,
+                    forceRefresh = true,
+                    startIndex = 0,
+                    playWhenReady = true
+                )
             }
         }
     }
@@ -91,13 +97,35 @@ class MainActivity : AppCompatActivity() {
         binding.refreshButton.setOnClickListener {
             currentFolderUri?.let { uri ->
                 loadTracks(uri, forceRefresh = true)
-                sendFolderToService(uri, forceRefresh = true)
+                sendFolderToService(
+                    uri = uri,
+                    forceRefresh = true,
+                    startIndex = 0,
+                    playWhenReady = true
+                )
             }
         }
         binding.playButton.setOnClickListener {
-            ensurePlaylistLoaded()
-            controller?.prepare()
-            controller?.play()
+            val currentController = controller
+            val uri = currentFolderUri ?: store.loadFolder()
+            if (currentController == null) {
+                pendingPlayIndex = null
+                maybeStartPlaybackService()
+                return@setOnClickListener
+            }
+            if (currentController.mediaItemCount == 0 && uri != null) {
+                val state = store.loadState()
+                sendFolderToService(
+                    uri = uri,
+                    forceRefresh = false,
+                    startIndex = state.index.coerceAtLeast(0),
+                    playWhenReady = true,
+                    startPositionMs = state.position.coerceAtLeast(0L)
+                )
+                return@setOnClickListener
+            }
+            currentController.prepare()
+            currentController.play()
         }
         binding.pauseButton.setOnClickListener { controller?.pause() }
         binding.stopButton.setOnClickListener { controller?.stop() }
@@ -132,7 +160,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun maybeStartPlaybackService() {
-        if (!hasNotificationPermission() || controller != null) {
+        if (controller != null) {
             return
         }
         startPlaybackService()
@@ -152,21 +180,39 @@ class MainActivity : AppCompatActivity() {
             updateCurrentTrack()
             updatePlayButton(controller?.isPlaying == true)
             pendingFolderUri?.let { pending ->
-                sendFolderToService(pending, forceRefresh = true)
+                sendFolderToService(
+                    uri = pending,
+                    forceRefresh = true,
+                    startIndex = 0,
+                    playWhenReady = true
+                )
                 pendingFolderUri = null
             }
-            if (pendingFolderUri == null) {
+            val pendingIndex = pendingPlayIndex
+            if (pendingIndex != null) {
+                playTrack(pendingIndex)
+                pendingPlayIndex = null
+            } else if (pendingFolderUri == null) {
                 ensurePlaylistLoaded()
             }
         }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun sendFolderToService(uri: Uri, forceRefresh: Boolean) {
+    private fun sendFolderToService(
+        uri: Uri,
+        forceRefresh: Boolean,
+        startIndex: Int,
+        playWhenReady: Boolean,
+        startPositionMs: Long = 0L
+    ) {
         val currentController = controller ?: return
         val command = SessionCommand(PlaybackService.CMD_SET_FOLDER, Bundle.EMPTY)
         val args = Bundle().apply {
             putString(PlaybackService.EXTRA_TREE_URI, uri.toString())
             putBoolean(PlaybackService.EXTRA_FORCE_REFRESH, forceRefresh)
+            putInt(PlaybackService.EXTRA_START_INDEX, startIndex)
+            putLong(PlaybackService.EXTRA_START_POSITION_MS, startPositionMs.coerceAtLeast(0L))
+            putBoolean(PlaybackService.EXTRA_PLAY_WHEN_READY, playWhenReady)
         }
         currentController.sendCustomCommand(command, args)
     }
@@ -197,8 +243,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun playTrack(index: Int) {
-        val currentController = controller ?: return
-        ensurePlaylistLoaded()
+        val currentController = controller
+        val uri = currentFolderUri ?: store.loadFolder()
+        if (currentController == null) {
+            pendingPlayIndex = index
+            maybeStartPlaybackService()
+            return
+        }
+        if (currentController.mediaItemCount == 0 && uri != null) {
+            sendFolderToService(
+                uri = uri,
+                forceRefresh = false,
+                startIndex = index,
+                playWhenReady = true
+            )
+            return
+        }
         currentController.seekTo(index, 0)
         currentController.prepare()
         currentController.play()
@@ -208,7 +268,14 @@ class MainActivity : AppCompatActivity() {
         val currentController = controller ?: return
         val uri = currentFolderUri ?: store.loadFolder() ?: return
         if (currentController.mediaItemCount == 0) {
-            sendFolderToService(uri, forceRefresh = false)
+            val state = store.loadState()
+            sendFolderToService(
+                uri = uri,
+                forceRefresh = false,
+                startIndex = state.index.coerceAtLeast(0),
+                playWhenReady = false,
+                startPositionMs = state.position.coerceAtLeast(0L)
+            )
         }
     }
 
@@ -257,11 +324,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun hasNotificationPermission(): Boolean {
-        return Build.VERSION.SDK_INT < 33 ||
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-    }
 }
