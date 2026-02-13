@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,12 @@ import java.lang.String;
 public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   private final LinearLayout rootView;
+
+  @NonNull
+  public final TextView currentTimeText;
+
+  @NonNull
+  public final TextView durationText;
 
   @NonNull
   public final TextView folderText;
@@ -56,14 +63,21 @@ public final class ActivityMainBinding implements ViewBinding {
   public final RecyclerView trackList;
 
   @NonNull
+  public final SeekBar trackSeekBar;
+
+  @NonNull
   public final TextView trackText;
 
-  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull TextView folderText,
+  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull TextView currentTimeText,
+      @NonNull TextView durationText, @NonNull TextView folderText,
       @NonNull LinearLayout loadingRow, @NonNull ProgressBar loadingSpinner,
       @NonNull TextView loadingText, @NonNull Button nextButton, @NonNull Button pauseButton,
       @NonNull Button playButton, @NonNull Button refreshButton, @NonNull Button selectFolderButton,
-      @NonNull Button stopButton, @NonNull RecyclerView trackList, @NonNull TextView trackText) {
+      @NonNull Button stopButton, @NonNull RecyclerView trackList, @NonNull SeekBar trackSeekBar,
+      @NonNull TextView trackText) {
     this.rootView = rootView;
+    this.currentTimeText = currentTimeText;
+    this.durationText = durationText;
     this.folderText = folderText;
     this.loadingRow = loadingRow;
     this.loadingSpinner = loadingSpinner;
@@ -75,6 +89,7 @@ public final class ActivityMainBinding implements ViewBinding {
     this.selectFolderButton = selectFolderButton;
     this.stopButton = stopButton;
     this.trackList = trackList;
+    this.trackSeekBar = trackSeekBar;
     this.trackText = trackText;
   }
 
@@ -105,6 +120,18 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.currentTimeText;
+      TextView currentTimeText = ViewBindings.findChildViewById(rootView, id);
+      if (currentTimeText == null) {
+        break missingId;
+      }
+
+      id = R.id.durationText;
+      TextView durationText = ViewBindings.findChildViewById(rootView, id);
+      if (durationText == null) {
+        break missingId;
+      }
+
       id = R.id.folderText;
       TextView folderText = ViewBindings.findChildViewById(rootView, id);
       if (folderText == null) {
@@ -171,15 +198,21 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.trackSeekBar;
+      SeekBar trackSeekBar = ViewBindings.findChildViewById(rootView, id);
+      if (trackSeekBar == null) {
+        break missingId;
+      }
+
       id = R.id.trackText;
       TextView trackText = ViewBindings.findChildViewById(rootView, id);
       if (trackText == null) {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, folderText, loadingRow,
-          loadingSpinner, loadingText, nextButton, pauseButton, playButton, refreshButton,
-          selectFolderButton, stopButton, trackList, trackText);
+      return new ActivityMainBinding((LinearLayout) rootView, currentTimeText, durationText,
+          folderText, loadingRow, loadingSpinner, loadingText, nextButton, pauseButton, playButton,
+          refreshButton, selectFolderButton, stopButton, trackList, trackSeekBar, trackText);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

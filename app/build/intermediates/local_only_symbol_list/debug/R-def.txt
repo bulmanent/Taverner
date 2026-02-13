@@ -4,6 +4,8 @@ color taverner_bg
 color taverner_primary
 color taverner_secondary
 drawable ic_launcher
+id currentTimeText
+id durationText
 id folderText
 id loadingRow
 id loadingSpinner
@@ -15,6 +17,7 @@ id refreshButton
 id selectFolderButton
 id stopButton
 id trackList
+id trackSeekBar
 id trackText
 layout activity_main
 string app_name

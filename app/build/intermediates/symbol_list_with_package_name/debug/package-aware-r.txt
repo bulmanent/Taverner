@@ -3282,6 +3282,7 @@ id coordinator
 id cos
 id counterclockwise
 id cradle
+id currentTimeText
 id custom
 id customPanel
 id cut
@@ -3310,6 +3311,7 @@ id dragRight
 id dragStart
 id dragUp
 id dropdown_menu
+id durationText
 id easeIn
 id easeInOut
 id easeOut
@@ -3663,6 +3665,7 @@ id top
 id topPanel
 id touch_outside
 id trackList
+id trackSeekBar
 id trackText
 id transitionToEnd
 id transitionToStart

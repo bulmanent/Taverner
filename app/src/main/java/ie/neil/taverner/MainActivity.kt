@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.content.res.ColorStateList
+import android.widget.SeekBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -22,6 +23,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.common.util.concurrent.ListenableFuture
 import ie.neil.taverner.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     private var currentFolderUri: Uri? = null
     private var pendingPlayIndex: Int? = null
     private var playButtonDefaultTint: ColorStateList? = null
+    private var progressJob: Job? = null
+    private var isUserSeeking = false
 
     private val playerListener = object : Player.Listener {
         override fun onMediaItemTransition(mediaItem: androidx.media3.common.MediaItem?, reason: Int) {
@@ -47,6 +53,11 @@ class MainActivity : AppCompatActivity() {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             updateCurrentTrack()
             updatePlayButton(isPlaying)
+            updateProgressUi()
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            updateProgressUi()
         }
     }
 
@@ -130,7 +141,26 @@ class MainActivity : AppCompatActivity() {
         binding.pauseButton.setOnClickListener { controller?.pause() }
         binding.stopButton.setOnClickListener { controller?.stop() }
         binding.nextButton.setOnClickListener { controller?.seekToNext() }
+        binding.trackSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    binding.currentTimeText.text = formatTime(progress.toLong())
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                isUserSeeking = true
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                val target = seekBar?.progress?.toLong() ?: 0L
+                controller?.seekTo(target)
+                isUserSeeking = false
+                updateProgressUi()
+            }
+        })
         playButtonDefaultTint = binding.playButton.backgroundTintList
+        updateProgressUi()
 
         ensureRuntimePermissions()
 
@@ -143,11 +173,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        startProgressUpdates()
         maybeStartPlaybackService()
     }
 
     override fun onStop() {
         super.onStop()
+        stopProgressUpdates()
         controller?.removeListener(playerListener)
         controller?.release()
         controller = null
@@ -179,6 +211,7 @@ class MainActivity : AppCompatActivity() {
             controller?.addListener(playerListener)
             updateCurrentTrack()
             updatePlayButton(controller?.isPlaying == true)
+            updateProgressUi()
             pendingFolderUri?.let { pending ->
                 sendFolderToService(
                     uri = pending,
@@ -231,6 +264,7 @@ class MainActivity : AppCompatActivity() {
             (binding.trackList.layoutManager as? LinearLayoutManager)
                 ?.scrollToPositionWithOffset(index, 0)
         }
+        updateProgressUi()
     }
 
     private fun updatePlayButton(isPlaying: Boolean) {
@@ -321,6 +355,55 @@ class MainActivity : AppCompatActivity() {
         }
         if (needsRequest) {
             permissionLauncher.launch(permissions.toTypedArray())
+        }
+    }
+
+    private fun startProgressUpdates() {
+        if (progressJob != null) {
+            return
+        }
+        progressJob = lifecycleScope.launch {
+            while (isActive) {
+                updateProgressUi()
+                delay(if (controller?.isPlaying == true) 500L else 1000L)
+            }
+        }
+    }
+
+    private fun stopProgressUpdates() {
+        progressJob?.cancel()
+        progressJob = null
+    }
+
+    private fun updateProgressUi() {
+        val currentController = controller
+        val durationMs = currentController?.duration?.takeIf { it > 0L } ?: 0L
+        val maxMs = durationMs.coerceAtMost(Int.MAX_VALUE.toLong()).toInt().coerceAtLeast(1)
+        val positionMs = currentController?.currentPosition?.coerceAtLeast(0L) ?: 0L
+        val clampedPosition = if (durationMs > 0L) {
+            positionMs.coerceAtMost(durationMs)
+        } else {
+            positionMs
+        }
+
+        binding.trackSeekBar.isEnabled = currentController != null && durationMs > 0L
+        binding.trackSeekBar.max = maxMs
+        if (!isUserSeeking) {
+            binding.trackSeekBar.progress = clampedPosition.coerceAtMost(maxMs.toLong()).toInt()
+            binding.currentTimeText.text = formatTime(clampedPosition)
+        }
+        binding.durationText.text = formatTime(durationMs)
+    }
+
+    private fun formatTime(ms: Long): String {
+        val totalSeconds = (ms / 1000L).coerceAtLeast(0L)
+        val seconds = totalSeconds % 60L
+        val minutes = (totalSeconds / 60L) % 60L
+        val hours = totalSeconds / 3600L
+        return if (hours > 0L) {
+            String.format("%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format("%d:%02d", minutes, seconds)
         }
     }
 
