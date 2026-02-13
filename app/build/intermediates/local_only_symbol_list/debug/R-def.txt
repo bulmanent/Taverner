@@ -5,6 +5,9 @@ color taverner_primary
 color taverner_secondary
 drawable ic_launcher
 id folderText
+id loadingRow
+id loadingSpinner
+id loadingText
 id nextButton
 id pauseButton
 id playButton
@@ -15,6 +18,7 @@ id trackList
 id trackText
 layout activity_main
 string app_name
+string loading_tracks
 string next
 string no_folder
 string no_track

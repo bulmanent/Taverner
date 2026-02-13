@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,15 @@ public final class ActivityMainBinding implements ViewBinding {
 
   @NonNull
   public final TextView folderText;
+
+  @NonNull
+  public final LinearLayout loadingRow;
+
+  @NonNull
+  public final ProgressBar loadingSpinner;
+
+  @NonNull
+  public final TextView loadingText;
 
   @NonNull
   public final Button nextButton;
@@ -49,11 +59,15 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView trackText;
 
   private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull TextView folderText,
-      @NonNull Button nextButton, @NonNull Button pauseButton, @NonNull Button playButton,
-      @NonNull Button refreshButton, @NonNull Button selectFolderButton, @NonNull Button stopButton,
-      @NonNull RecyclerView trackList, @NonNull TextView trackText) {
+      @NonNull LinearLayout loadingRow, @NonNull ProgressBar loadingSpinner,
+      @NonNull TextView loadingText, @NonNull Button nextButton, @NonNull Button pauseButton,
+      @NonNull Button playButton, @NonNull Button refreshButton, @NonNull Button selectFolderButton,
+      @NonNull Button stopButton, @NonNull RecyclerView trackList, @NonNull TextView trackText) {
     this.rootView = rootView;
     this.folderText = folderText;
+    this.loadingRow = loadingRow;
+    this.loadingSpinner = loadingSpinner;
+    this.loadingText = loadingText;
     this.nextButton = nextButton;
     this.pauseButton = pauseButton;
     this.playButton = playButton;
@@ -94,6 +108,24 @@ public final class ActivityMainBinding implements ViewBinding {
       id = R.id.folderText;
       TextView folderText = ViewBindings.findChildViewById(rootView, id);
       if (folderText == null) {
+        break missingId;
+      }
+
+      id = R.id.loadingRow;
+      LinearLayout loadingRow = ViewBindings.findChildViewById(rootView, id);
+      if (loadingRow == null) {
+        break missingId;
+      }
+
+      id = R.id.loadingSpinner;
+      ProgressBar loadingSpinner = ViewBindings.findChildViewById(rootView, id);
+      if (loadingSpinner == null) {
+        break missingId;
+      }
+
+      id = R.id.loadingText;
+      TextView loadingText = ViewBindings.findChildViewById(rootView, id);
+      if (loadingText == null) {
         break missingId;
       }
 
@@ -145,8 +177,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, folderText, nextButton, pauseButton,
-          playButton, refreshButton, selectFolderButton, stopButton, trackList, trackText);
+      return new ActivityMainBinding((LinearLayout) rootView, folderText, loadingRow,
+          loadingSpinner, loadingText, nextButton, pauseButton, playButton, refreshButton,
+          selectFolderButton, stopButton, trackList, trackText);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

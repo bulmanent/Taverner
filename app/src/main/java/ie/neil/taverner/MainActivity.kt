@@ -29,8 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val store by lazy { PlaybackStore(this) }
     private val adapter = TrackAdapter { index ->
-        controller?.seekTo(index, 0)
-        controller?.play()
+        playTrack(index)
     }
 
     private var controllerFuture: ListenableFuture<MediaController>? = null
@@ -95,7 +94,11 @@ class MainActivity : AppCompatActivity() {
                 sendFolderToService(uri, forceRefresh = true)
             }
         }
-        binding.playButton.setOnClickListener { controller?.play() }
+        binding.playButton.setOnClickListener {
+            ensurePlaylistLoaded()
+            controller?.prepare()
+            controller?.play()
+        }
         binding.pauseButton.setOnClickListener { controller?.pause() }
         binding.stopButton.setOnClickListener { controller?.stop() }
         binding.nextButton.setOnClickListener { controller?.seekToNext() }
@@ -140,13 +143,20 @@ class MainActivity : AppCompatActivity() {
         val token = SessionToken(this, ComponentName(this, PlaybackService::class.java))
         controllerFuture = MediaController.Builder(this, token).buildAsync()
         controllerFuture?.addListener({
-            controller = controllerFuture?.get()
+            controller = try {
+                controllerFuture?.get()
+            } catch (ex: Exception) {
+                null
+            }
             controller?.addListener(playerListener)
             updateCurrentTrack()
             updatePlayButton(controller?.isPlaying == true)
             pendingFolderUri?.let { pending ->
                 sendFolderToService(pending, forceRefresh = true)
                 pendingFolderUri = null
+            }
+            if (pendingFolderUri == null) {
+                ensurePlaylistLoaded()
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -183,6 +193,22 @@ class MainActivity : AppCompatActivity() {
             ColorStateList.valueOf(highlight)
         } else {
             playButtonDefaultTint
+        }
+    }
+
+    private fun playTrack(index: Int) {
+        val currentController = controller ?: return
+        ensurePlaylistLoaded()
+        currentController.seekTo(index, 0)
+        currentController.prepare()
+        currentController.play()
+    }
+
+    private fun ensurePlaylistLoaded() {
+        val currentController = controller ?: return
+        val uri = currentFolderUri ?: store.loadFolder() ?: return
+        if (currentController.mediaItemCount == 0) {
+            sendFolderToService(uri, forceRefresh = false)
         }
     }
 

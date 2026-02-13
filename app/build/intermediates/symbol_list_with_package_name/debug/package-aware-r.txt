@@ -3433,6 +3433,9 @@ id line3
 id linear
 id listMode
 id list_item
+id loadingRow
+id loadingSpinner
+id loadingText
 id m3_side_sheet
 id marquee
 id masked
@@ -4018,6 +4021,7 @@ string fab_transformation_sheet_behavior
 string hide_bottom_view_on_scroll_behavior
 string icon_content_description
 string item_view_role_description
+string loading_tracks
 string m3_exceed_max_badge_text_suffix
 string m3_ref_typeface_brand_medium
 string m3_ref_typeface_brand_regular

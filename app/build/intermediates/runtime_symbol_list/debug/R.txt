@@ -3432,6 +3432,9 @@ int id line3 0x7f0a0109
 int id linear 0x7f0a010a
 int id listMode 0x7f0a010b
 int id list_item 0x7f0a010c
+int id loadingRow 0x7f0a020d
+int id loadingSpinner 0x7f0a020e
+int id loadingText 0x7f0a020f
 int id m3_side_sheet 0x7f0a010d
 int id marquee 0x7f0a010e
 int id masked 0x7f0a010f
@@ -4017,6 +4020,7 @@ int string fab_transformation_sheet_behavior 0x7f10006b
 int string hide_bottom_view_on_scroll_behavior 0x7f10006c
 int string icon_content_description 0x7f10006d
 int string item_view_role_description 0x7f10006e
+int string loading_tracks 0x7f1000ed
 int string m3_exceed_max_badge_text_suffix 0x7f10006f
 int string m3_ref_typeface_brand_medium 0x7f100070
 int string m3_ref_typeface_brand_regular 0x7f100071

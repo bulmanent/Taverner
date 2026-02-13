@@ -4,6 +4,7 @@
     <color name="taverner_primary">#2B3A55</color>
     <color name="taverner_secondary">#A3412C</color>
     <string name="app_name">Taverner</string>
+    <string name="loading_tracks">Loading tracks...</string>
     <string name="next">Next</string>
     <string name="no_folder">No folder selected</string>
     <string name="no_track">No track</string>

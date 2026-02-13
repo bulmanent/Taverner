@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -31,6 +32,7 @@ class PlaybackService : MediaSessionService() {
     private lateinit var store: PlaybackStore
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var loadJob: Job? = null
+    private var progressPersistJob: Job? = null
 
     private val noisyReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: android.content.Context?, intent: Intent?) {
@@ -65,6 +67,7 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
+        progressPersistJob?.cancel()
         persistNow()
         unregisterReceiver(noisyReceiver)
         serviceScope.cancel()
@@ -135,6 +138,19 @@ class PlaybackService : MediaSessionService() {
         )
     }
 
+    private fun restartPeriodicPersistence() {
+        progressPersistJob?.cancel()
+        if (!player.isPlaying) {
+            return
+        }
+        progressPersistJob = serviceScope.launch {
+            while (player.isPlaying) {
+                delay(PERSIST_INTERVAL_MS)
+                persistNow()
+            }
+        }
+    }
+
     private inner class PlayerEventListener : Player.Listener {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             persistNow()
@@ -142,6 +158,7 @@ class PlaybackService : MediaSessionService() {
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             persistNow()
+            restartPeriodicPersistence()
         }
     }
 
@@ -170,5 +187,6 @@ class PlaybackService : MediaSessionService() {
         const val CMD_SET_FOLDER = "taverner_set_folder"
         const val EXTRA_TREE_URI = "extra_tree_uri"
         const val EXTRA_FORCE_REFRESH = "extra_force_refresh"
+        private const val PERSIST_INTERVAL_MS = 15_000L
     }
 }
