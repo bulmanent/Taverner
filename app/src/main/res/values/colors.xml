@@ -1,5 +1,6 @@
 <resources>
-    <color name="taverner_bg">#FFF7F0</color>
-    <color name="taverner_primary">#2B3A55</color>
-    <color name="taverner_secondary">#A3412C</color>
+    <color name="taverner_bg">#1A1A1A</color>
+    <color name="taverner_text">#90EE90</color>
+    <color name="taverner_primary">#2A5C2A</color>
+    <color name="taverner_secondary">#1F3D1F</color>
 </resources>
