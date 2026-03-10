@@ -116,19 +116,10 @@ class PlaybackService : MediaSessionService() {
     ) {
         loadJob?.cancel()
         loadJob = serviceScope.launch {
-            val cached = withContext(Dispatchers.IO) {
-                if (forceRefresh) emptyList() else store.loadTracks(folder)
-            }
-            val tracks = if (cached.isNotEmpty()) {
-                cached
-            } else {
-                withContext(Dispatchers.IO) {
-                    AudioScanner.scan(this@PlaybackService, folder)
-                }.also { scanned ->
-                    if (scanned.isNotEmpty()) {
-                        store.saveTracks(folder, scanned)
-                    }
-                }
+            // The activity is the sole scanner; the service only reads the cache that
+            // the activity writes. This prevents concurrent file writes and ANR on shutdown.
+            val tracks = withContext(Dispatchers.IO) {
+                store.loadTracks(folder)
             }
             if (tracks.isEmpty()) {
                 player.clearMediaItems()

@@ -73,7 +73,7 @@ class PlaybackStore(private val context: Context) {
 
     // Must be called from a background thread.
     fun loadTracks(folder: Uri): List<Track> {
-        if (!cacheFile.exists()) return emptyList()
+        if (!cacheFile.exists()) return migrateFromPrefs(folder)
         return try {
             val json = JSONObject(cacheFile.readText())
             if (json.optString("folder") != folder.toString()) return emptyList()
@@ -93,6 +93,31 @@ class PlaybackStore(private val context: Context) {
 
     fun clearTracks() {
         cacheFile.delete()
+    }
+
+    // One-time migration: reads tracks from the old SharedPreferences storage and writes
+    // them to the new file, so users don't lose their cache on the first run after the update.
+    private fun migrateFromPrefs(folder: Uri): List<Track> {
+        val savedFolder = prefs.getString("tracks_folder", null) ?: return emptyList()
+        if (savedFolder != folder.toString()) return emptyList()
+        val raw = prefs.getString("tracks_cache", null) ?: return emptyList()
+        return try {
+            val json = JSONArray(raw)
+            val tracks = ArrayList<Track>(json.length())
+            for (i in 0 until json.length()) {
+                val item = json.optJSONObject(i) ?: continue
+                val uri = item.optString("uri").takeIf { it.isNotEmpty() } ?: continue
+                val name = item.optString("name", "Unknown")
+                tracks.add(Track(Uri.parse(uri), name))
+            }
+            if (tracks.isNotEmpty()) {
+                saveTracks(folder, tracks)
+                prefs.edit().remove("tracks_cache").remove("tracks_folder").apply()
+            }
+            tracks
+        } catch (ex: Exception) {
+            emptyList()
+        }
     }
 
     data class PlaybackState(

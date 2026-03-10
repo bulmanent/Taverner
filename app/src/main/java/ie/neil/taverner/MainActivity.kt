@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity() {
             store.clearTracks()
             updateFolderLabel(uri)
             currentFolderUri = uri
-            loadTracks(uri, forceRefresh = true)
             val startIndex: Int
             val startPositionMs: Long
             if (isSameFolder) {
@@ -96,18 +95,26 @@ class MainActivity : AppCompatActivity() {
                 startIndex = savedState?.index ?: 0
                 startPositionMs = savedState?.position ?: 0L
             }
-            if (controller == null) {
-                pendingFolderUri = uri
-                pendingStartIndex = startIndex
-                pendingStartPositionMs = startPositionMs
-            } else {
-                sendFolderToService(
-                    uri = uri,
-                    forceRefresh = true,
-                    startIndex = startIndex,
-                    startPositionMs = startPositionMs,
-                    playWhenReady = true
-                )
+            // Always set pending in case the controller isn't connected yet.
+            pendingFolderUri = uri
+            pendingStartIndex = startIndex
+            pendingStartPositionMs = startPositionMs
+            loadTracks(uri, forceRefresh = true) {
+                // Cache is now freshly written. If the controller is ready, send directly;
+                // otherwise pendingFolderUri will be handled when the controller connects.
+                val ctrl = controller
+                if (ctrl != null) {
+                    pendingFolderUri = null
+                    pendingStartIndex = 0
+                    pendingStartPositionMs = 0L
+                    sendFolderToService(
+                        uri = uri,
+                        forceRefresh = false,
+                        startIndex = startIndex,
+                        startPositionMs = startPositionMs,
+                        playWhenReady = true
+                    )
+                }
             }
         }
     }
@@ -132,14 +139,17 @@ class MainActivity : AppCompatActivity() {
             currentFolderUri?.let { uri ->
                 val index = controller?.currentMediaItemIndex ?: 0
                 val position = controller?.currentPosition ?: 0L
-                loadTracks(uri, forceRefresh = true)
-                sendFolderToService(
-                    uri = uri,
-                    forceRefresh = true,
-                    startIndex = index,
-                    startPositionMs = position,
-                    playWhenReady = controller?.isPlaying == true
-                )
+                val wasPlaying = controller?.isPlaying == true
+                loadTracks(uri, forceRefresh = true) {
+                    // Cache is now freshly written; tell the service to reload from it.
+                    sendFolderToService(
+                        uri = uri,
+                        forceRefresh = false,
+                        startIndex = index,
+                        startPositionMs = position,
+                        playWhenReady = wasPlaying
+                    )
+                }
             }
         }
         binding.playButton.setOnClickListener {
@@ -342,7 +352,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadTracks(uri: Uri, forceRefresh: Boolean = false) {
+    private fun loadTracks(
+        uri: Uri,
+        forceRefresh: Boolean = false,
+        onScanComplete: (() -> Unit)? = null
+    ) {
         lifecycleScope.launch(Dispatchers.IO) {
             val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
             if (cached.isNotEmpty()) {
@@ -367,6 +381,12 @@ class MainActivity : AppCompatActivity() {
                 binding.loadingRow.visibility = android.view.View.GONE
                 adapter.tracks = scanned
                 updateCurrentTrack()
+                if (onScanComplete != null) {
+                    onScanComplete()
+                } else if ((controller?.mediaItemCount ?: 0) == 0) {
+                    // Cold start with empty cache: cache is now saved, trigger service load.
+                    ensurePlaylistLoaded()
+                }
             }
         }
     }
