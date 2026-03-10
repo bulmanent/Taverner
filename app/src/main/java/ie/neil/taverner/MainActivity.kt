@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.content.res.ColorStateList
 import android.widget.SeekBar
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
@@ -137,19 +138,25 @@ class MainActivity : AppCompatActivity() {
         binding.selectFolderButton.setOnClickListener { openTreeLauncher.launch(null) }
         binding.refreshButton.setOnClickListener {
             currentFolderUri?.let { uri ->
-                val index = controller?.currentMediaItemIndex ?: 0
-                val position = controller?.currentPosition ?: 0L
-                val wasPlaying = controller?.isPlaying == true
-                loadTracks(uri, forceRefresh = true) {
-                    // Cache is now freshly written; tell the service to reload from it.
-                    sendFolderToService(
-                        uri = uri,
-                        forceRefresh = false,
-                        startIndex = index,
-                        startPositionMs = position,
-                        playWhenReady = wasPlaying
-                    )
-                }
+                AlertDialog.Builder(this)
+                    .setTitle("Refresh")
+                    .setMessage("Rescan folder for new or removed tracks?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        val index = controller?.currentMediaItemIndex ?: 0
+                        val position = controller?.currentPosition ?: 0L
+                        val wasPlaying = controller?.isPlaying == true
+                        loadTracks(uri, forceRefresh = true) {
+                            sendFolderToService(
+                                uri = uri,
+                                forceRefresh = false,
+                                startIndex = index,
+                                startPositionMs = position,
+                                playWhenReady = wasPlaying
+                            )
+                        }
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
             }
         }
         binding.playButton.setOnClickListener {
@@ -203,6 +210,7 @@ class MainActivity : AppCompatActivity() {
         store.loadFolder()?.let { uri ->
             updateFolderLabel(uri)
             currentFolderUri = uri
+            loadTracks(uri)
         }
     }
 

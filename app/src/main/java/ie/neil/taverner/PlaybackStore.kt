@@ -4,11 +4,9 @@ import android.content.Context
 import android.net.Uri
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
 
-class PlaybackStore(private val context: Context) {
+class PlaybackStore(context: Context) {
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    private val cacheFile = File(context.filesDir, "tracks_cache.json")
 
     fun saveFolder(uri: Uri?) {
         prefs.edit().putString(KEY_FOLDER_URI, uri?.toString()).apply()
@@ -34,7 +32,6 @@ class PlaybackStore(private val context: Context) {
         )
     }
 
-    // Saves the playback position for a specific folder so it can be restored when returning to it.
     fun saveFolderState(folder: Uri, index: Int, position: Long) {
         val key = "fs_${folder.hashCode()}"
         prefs.edit()
@@ -43,7 +40,6 @@ class PlaybackStore(private val context: Context) {
             .apply()
     }
 
-    // Returns the saved position for a folder, or null if never saved.
     fun loadFolderState(folder: Uri): PlaybackState? {
         val key = "fs_${folder.hashCode()}"
         if (!prefs.contains("${key}_i")) return null
@@ -54,61 +50,25 @@ class PlaybackStore(private val context: Context) {
         )
     }
 
-    // Stored as a plain file to avoid SharedPreferences QueuedWork stalls on shutdown.
-    // Must be called from a background thread.
     fun saveTracks(folder: Uri, tracks: List<Track>) {
-        memCacheFolder = folder.toString()
-        memCacheTracks = tracks
-        val tracksArr = JSONArray()
-        tracks.forEach { track ->
-            tracksArr.put(
-                JSONObject()
+        val json = JSONArray().apply {
+            tracks.forEach { track ->
+                put(JSONObject()
                     .put("uri", track.uri.toString())
-                    .put("name", track.name)
-            )
+                    .put("name", track.name))
+            }
         }
-        val json = JSONObject()
-            .put("folder", folder.toString())
-            .put("tracks", tracksArr)
-        cacheFile.writeText(json.toString())
+        prefs.edit()
+            .putString(KEY_TRACKS_FOLDER, folder.toString())
+            .putString(KEY_TRACKS, json.toString())
+            .apply()
     }
 
     // Must be called from a background thread.
     fun loadTracks(folder: Uri): List<Track> {
-        val folderStr = folder.toString()
-        if (memCacheFolder == folderStr && memCacheTracks.isNotEmpty()) return memCacheTracks
-        if (!cacheFile.exists()) return migrateFromPrefs(folder)
-        return try {
-            val json = JSONObject(cacheFile.readText())
-            if (json.optString("folder") != folderStr) return emptyList()
-            val arr = json.optJSONArray("tracks") ?: return emptyList()
-            val tracks = ArrayList<Track>(arr.length())
-            for (i in 0 until arr.length()) {
-                val item = arr.optJSONObject(i) ?: continue
-                val uri = item.optString("uri").takeIf { it.isNotEmpty() } ?: continue
-                val name = item.optString("name", "Unknown")
-                tracks.add(Track(Uri.parse(uri), name))
-            }
-            memCacheFolder = folderStr
-            memCacheTracks = tracks
-            tracks
-        } catch (ex: Exception) {
-            emptyList()
-        }
-    }
-
-    fun clearTracks() {
-        memCacheFolder = null
-        memCacheTracks = emptyList()
-        cacheFile.delete()
-    }
-
-    // One-time migration: reads tracks from the old SharedPreferences storage and writes
-    // them to the new file, so users don't lose their cache on the first run after the update.
-    private fun migrateFromPrefs(folder: Uri): List<Track> {
-        val savedFolder = prefs.getString("tracks_folder", null) ?: return emptyList()
-        if (savedFolder != folder.toString()) return emptyList()
-        val raw = prefs.getString("tracks_cache", null) ?: return emptyList()
+        val cachedFolder = prefs.getString(KEY_TRACKS_FOLDER, null) ?: return emptyList()
+        if (cachedFolder != folder.toString()) return emptyList()
+        val raw = prefs.getString(KEY_TRACKS, null) ?: return emptyList()
         return try {
             val json = JSONArray(raw)
             val tracks = ArrayList<Track>(json.length())
@@ -118,14 +78,17 @@ class PlaybackStore(private val context: Context) {
                 val name = item.optString("name", "Unknown")
                 tracks.add(Track(Uri.parse(uri), name))
             }
-            if (tracks.isNotEmpty()) {
-                saveTracks(folder, tracks)
-                prefs.edit().remove("tracks_cache").remove("tracks_folder").apply()
-            }
             tracks
         } catch (ex: Exception) {
             emptyList()
         }
+    }
+
+    fun clearTracks() {
+        prefs.edit()
+            .remove(KEY_TRACKS)
+            .remove(KEY_TRACKS_FOLDER)
+            .apply()
     }
 
     data class PlaybackState(
@@ -140,9 +103,7 @@ class PlaybackStore(private val context: Context) {
         private const val KEY_INDEX = "track_index"
         private const val KEY_POSITION = "track_position"
         private const val KEY_PLAY_WHEN_READY = "play_when_ready"
-
-        // Process-wide in-memory cache so repeated reads within the same session are instant.
-        @Volatile private var memCacheFolder: String? = null
-        @Volatile private var memCacheTracks: List<Track> = emptyList()
+        private const val KEY_TRACKS = "tracks_cache"
+        private const val KEY_TRACKS_FOLDER = "tracks_folder"
     }
 }
