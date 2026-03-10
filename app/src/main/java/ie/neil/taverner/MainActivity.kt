@@ -203,7 +203,6 @@ class MainActivity : AppCompatActivity() {
         store.loadFolder()?.let { uri ->
             updateFolderLabel(uri)
             currentFolderUri = uri
-            loadTracks(uri)
         }
     }
 
