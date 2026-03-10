@@ -364,9 +364,11 @@ class MainActivity : AppCompatActivity() {
                     adapter.tracks = cached
                     updateCurrentTrack()
                 }
-                if (!forceRefresh) {
-                    return@launch
-                }
+                if (!forceRefresh) return@launch
+            } else if (!forceRefresh) {
+                // No cache on startup — don't scan automatically.
+                // The user can press Refresh to scan when ready.
+                return@launch
             } else {
                 withContext(Dispatchers.Main) {
                     binding.loadingRow.visibility = android.view.View.VISIBLE
@@ -384,7 +386,6 @@ class MainActivity : AppCompatActivity() {
                 if (onScanComplete != null) {
                     onScanComplete()
                 } else if ((controller?.mediaItemCount ?: 0) == 0) {
-                    // Cold start with empty cache: cache is now saved, trigger service load.
                     ensurePlaylistLoaded()
                 }
             }
