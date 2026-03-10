@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     private var controllerFuture: ListenableFuture<MediaController>? = null
     private var controller: MediaController? = null
     private var pendingFolderUri: Uri? = null
+    private var pendingStartIndex: Int = 0
+    private var pendingStartPositionMs: Long = 0L
     private var currentFolderUri: Uri? = null
     private var pendingPlayIndex: Int? = null
     private var playButtonDefaultTint: ColorStateList? = null
@@ -65,6 +67,14 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
         if (uri != null) {
+            val oldUri = currentFolderUri
+            // Save playback position for the folder we're leaving.
+            oldUri?.let {
+                store.saveFolderState(it,
+                    controller?.currentMediaItemIndex ?: 0,
+                    controller?.currentPosition ?: 0L)
+            }
+            val isSameFolder = oldUri?.toString() == uri.toString()
             val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             try {
                 contentResolver.takePersistableUriPermission(uri, flags)
@@ -76,13 +86,26 @@ class MainActivity : AppCompatActivity() {
             updateFolderLabel(uri)
             currentFolderUri = uri
             loadTracks(uri, forceRefresh = true)
+            val startIndex: Int
+            val startPositionMs: Long
+            if (isSameFolder) {
+                startIndex = controller?.currentMediaItemIndex ?: 0
+                startPositionMs = controller?.currentPosition ?: 0L
+            } else {
+                val savedState = store.loadFolderState(uri)
+                startIndex = savedState?.index ?: 0
+                startPositionMs = savedState?.position ?: 0L
+            }
             if (controller == null) {
                 pendingFolderUri = uri
+                pendingStartIndex = startIndex
+                pendingStartPositionMs = startPositionMs
             } else {
                 sendFolderToService(
                     uri = uri,
                     forceRefresh = true,
-                    startIndex = 0,
+                    startIndex = startIndex,
+                    startPositionMs = startPositionMs,
                     playWhenReady = true
                 )
             }
@@ -107,12 +130,15 @@ class MainActivity : AppCompatActivity() {
         binding.selectFolderButton.setOnClickListener { openTreeLauncher.launch(null) }
         binding.refreshButton.setOnClickListener {
             currentFolderUri?.let { uri ->
+                val index = controller?.currentMediaItemIndex ?: 0
+                val position = controller?.currentPosition ?: 0L
                 loadTracks(uri, forceRefresh = true)
                 sendFolderToService(
                     uri = uri,
                     forceRefresh = true,
-                    startIndex = 0,
-                    playWhenReady = true
+                    startIndex = index,
+                    startPositionMs = position,
+                    playWhenReady = controller?.isPlaying == true
                 )
             }
         }
@@ -216,10 +242,13 @@ class MainActivity : AppCompatActivity() {
                 sendFolderToService(
                     uri = pending,
                     forceRefresh = true,
-                    startIndex = 0,
+                    startIndex = pendingStartIndex,
+                    startPositionMs = pendingStartPositionMs,
                     playWhenReady = true
                 )
                 pendingFolderUri = null
+                pendingStartIndex = 0
+                pendingStartPositionMs = 0L
             }
             val pendingIndex = pendingPlayIndex
             if (pendingIndex != null) {

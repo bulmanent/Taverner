@@ -4,9 +4,11 @@ import android.content.Context
 import android.net.Uri
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 
-class PlaybackStore(context: Context) {
+class PlaybackStore(private val context: Context) {
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val cacheFile = File(context.filesDir, "tracks_cache.json")
 
     fun saveFolder(uri: Uri?) {
         prefs.edit().putString(KEY_FOLDER_URI, uri?.toString()).apply()
@@ -24,34 +26,62 @@ class PlaybackStore(context: Context) {
             .apply()
     }
 
-    fun saveTracks(folder: Uri, tracks: List<Track>) {
-        val json = JSONArray().apply {
-            tracks.forEach { track ->
-                put(
-                    JSONObject()
-                        .put("uri", track.uri.toString())
-                        .put("name", track.name)
-                )
-            }
-        }
+    fun loadState(): PlaybackState {
+        return PlaybackState(
+            index = prefs.getInt(KEY_INDEX, 0),
+            position = prefs.getLong(KEY_POSITION, 0L),
+            playWhenReady = prefs.getBoolean(KEY_PLAY_WHEN_READY, false)
+        )
+    }
+
+    // Saves the playback position for a specific folder so it can be restored when returning to it.
+    fun saveFolderState(folder: Uri, index: Int, position: Long) {
+        val key = "fs_${folder.hashCode()}"
         prefs.edit()
-            .putString(KEY_TRACKS_FOLDER, folder.toString())
-            .putString(KEY_TRACKS, json.toString())
+            .putInt("${key}_i", index)
+            .putLong("${key}_p", position)
             .apply()
     }
 
-    fun loadTracks(folder: Uri): List<Track> {
-        val cachedFolder = prefs.getString(KEY_TRACKS_FOLDER, null) ?: return emptyList()
-        if (cachedFolder != folder.toString()) {
-            return emptyList()
+    // Returns the saved position for a folder, or null if never saved.
+    fun loadFolderState(folder: Uri): PlaybackState? {
+        val key = "fs_${folder.hashCode()}"
+        if (!prefs.contains("${key}_i")) return null
+        return PlaybackState(
+            index = prefs.getInt("${key}_i", 0),
+            position = prefs.getLong("${key}_p", 0L),
+            playWhenReady = false
+        )
+    }
+
+    // Stored as a plain file to avoid SharedPreferences QueuedWork stalls on shutdown.
+    // Must be called from a background thread.
+    fun saveTracks(folder: Uri, tracks: List<Track>) {
+        val tracksArr = JSONArray()
+        tracks.forEach { track ->
+            tracksArr.put(
+                JSONObject()
+                    .put("uri", track.uri.toString())
+                    .put("name", track.name)
+            )
         }
-        val raw = prefs.getString(KEY_TRACKS, null) ?: return emptyList()
+        val json = JSONObject()
+            .put("folder", folder.toString())
+            .put("tracks", tracksArr)
+        cacheFile.writeText(json.toString())
+    }
+
+    // Must be called from a background thread.
+    fun loadTracks(folder: Uri): List<Track> {
+        if (!cacheFile.exists()) return emptyList()
         return try {
-            val json = JSONArray(raw)
-            val tracks = ArrayList<Track>(json.length())
-            for (i in 0 until json.length()) {
-                val item = json.optJSONObject(i) ?: continue
-                val uri = item.optString("uri", null) ?: continue
+            val json = JSONObject(cacheFile.readText())
+            if (json.optString("folder") != folder.toString()) return emptyList()
+            val arr = json.optJSONArray("tracks") ?: return emptyList()
+            val tracks = ArrayList<Track>(arr.length())
+            for (i in 0 until arr.length()) {
+                val item = arr.optJSONObject(i) ?: continue
+                val uri = item.optString("uri").takeIf { it.isNotEmpty() } ?: continue
                 val name = item.optString("name", "Unknown")
                 tracks.add(Track(Uri.parse(uri), name))
             }
@@ -62,18 +92,7 @@ class PlaybackStore(context: Context) {
     }
 
     fun clearTracks() {
-        prefs.edit()
-            .remove(KEY_TRACKS)
-            .remove(KEY_TRACKS_FOLDER)
-            .apply()
-    }
-
-    fun loadState(): PlaybackState {
-        return PlaybackState(
-            index = prefs.getInt(KEY_INDEX, 0),
-            position = prefs.getLong(KEY_POSITION, 0L),
-            playWhenReady = prefs.getBoolean(KEY_PLAY_WHEN_READY, false)
-        )
+        cacheFile.delete()
     }
 
     data class PlaybackState(
@@ -88,7 +107,5 @@ class PlaybackStore(context: Context) {
         private const val KEY_INDEX = "track_index"
         private const val KEY_POSITION = "track_position"
         private const val KEY_PLAY_WHEN_READY = "play_when_ready"
-        private const val KEY_TRACKS = "tracks_cache"
-        private const val KEY_TRACKS_FOLDER = "tracks_folder"
     }
 }
