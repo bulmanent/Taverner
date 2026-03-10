@@ -3551,6 +3551,7 @@ int id pooling_container_listener_holder_tag 0x7f0a017f
 int id position 0x7f0a0180
 int id postLayout 0x7f0a0181
 int id pressed 0x7f0a0182
+int id prevButton 0x7f0a0213
 int id progress_circular 0x7f0a0183
 int id progress_horizontal 0x7f0a0184
 int id radio 0x7f0a0185
@@ -3620,7 +3621,6 @@ int id staticLayout 0x7f0a01c4
 int id staticPostLayout 0x7f0a01c5
 int id status_bar_latest_event_content 0x7f0a01c6
 int id stop 0x7f0a01c7
-int id stopButton 0x7f0a01c8
 int id stretch 0x7f0a01c9
 int id submenuarrow 0x7f0a01ca
 int id submit_area 0x7f0a01cb
@@ -4141,6 +4141,7 @@ int string path_password_eye_mask_visible 0x7f1000e0
 int string path_password_strike_through 0x7f1000e1
 int string pause 0x7f1000e2
 int string play 0x7f1000e3
+int string prev 0x7f1000ee
 int string refresh 0x7f1000e4
 int string search_menu_title 0x7f1000e5
 int string searchbar_scrolling_view_behavior 0x7f1000e6

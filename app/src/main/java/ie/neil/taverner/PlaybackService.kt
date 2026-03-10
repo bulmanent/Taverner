@@ -116,7 +116,9 @@ class PlaybackService : MediaSessionService() {
     ) {
         loadJob?.cancel()
         loadJob = serviceScope.launch {
-            val cached = if (forceRefresh) emptyList() else store.loadTracks(folder)
+            val cached = withContext(Dispatchers.IO) {
+                if (forceRefresh) emptyList() else store.loadTracks(folder)
+            }
             val tracks = if (cached.isNotEmpty()) {
                 cached
             } else {

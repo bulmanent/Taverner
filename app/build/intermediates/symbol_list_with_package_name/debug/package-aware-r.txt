@@ -3552,6 +3552,7 @@ id pooling_container_listener_holder_tag
 id position
 id postLayout
 id pressed
+id prevButton
 id progress_circular
 id progress_horizontal
 id radio
@@ -3621,7 +3622,6 @@ id staticLayout
 id staticPostLayout
 id status_bar_latest_event_content
 id stop
-id stopButton
 id stretch
 id submenuarrow
 id submit_area
@@ -4142,6 +4142,7 @@ string path_password_eye_mask_visible
 string path_password_strike_through
 string pause
 string play
+string prev
 string refresh
 string search_menu_title
 string searchbar_scrolling_view_behavior

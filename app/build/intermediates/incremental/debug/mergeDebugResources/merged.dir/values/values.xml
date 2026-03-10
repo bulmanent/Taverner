@@ -960,8 +960,8 @@
     <color name="switch_thumb_normal_material_dark">#ffbdbdbd</color>
     <color name="switch_thumb_normal_material_light">#fff1f1f1</color>
     <color name="taverner_bg">#1A1A1A</color>
-    <color name="taverner_primary">#2A5C2A</color>
-    <color name="taverner_secondary">#1F3D1F</color>
+    <color name="taverner_primary">#5A9E5A</color>
+    <color name="taverner_secondary">#90EE90</color>
     <color name="taverner_text">#90EE90</color>
     <color name="tooltip_background_dark">#e6616161</color>
     <color name="tooltip_background_light">#e6FFFFFF</color>
@@ -2321,6 +2321,7 @@
     <string name="path_password_strike_through" translatable="false">M3.27,4.27 L19.74,20.74</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
+    <string name="prev">Prev</string>
     <string name="refresh">Refresh</string>
     <string name="search_menu_title">Search</string>
     <string name="searchbar_scrolling_view_behavior" translatable="false">

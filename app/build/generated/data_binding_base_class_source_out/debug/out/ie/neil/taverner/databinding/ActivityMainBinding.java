@@ -51,13 +51,13 @@ public final class ActivityMainBinding implements ViewBinding {
   public final Button playButton;
 
   @NonNull
+  public final Button prevButton;
+
+  @NonNull
   public final Button refreshButton;
 
   @NonNull
   public final Button selectFolderButton;
-
-  @NonNull
-  public final Button stopButton;
 
   @NonNull
   public final RecyclerView trackList;
@@ -72,9 +72,9 @@ public final class ActivityMainBinding implements ViewBinding {
       @NonNull TextView durationText, @NonNull TextView folderText,
       @NonNull LinearLayout loadingRow, @NonNull ProgressBar loadingSpinner,
       @NonNull TextView loadingText, @NonNull Button nextButton, @NonNull Button pauseButton,
-      @NonNull Button playButton, @NonNull Button refreshButton, @NonNull Button selectFolderButton,
-      @NonNull Button stopButton, @NonNull RecyclerView trackList, @NonNull SeekBar trackSeekBar,
-      @NonNull TextView trackText) {
+      @NonNull Button playButton, @NonNull Button prevButton, @NonNull Button refreshButton,
+      @NonNull Button selectFolderButton, @NonNull RecyclerView trackList,
+      @NonNull SeekBar trackSeekBar, @NonNull TextView trackText) {
     this.rootView = rootView;
     this.currentTimeText = currentTimeText;
     this.durationText = durationText;
@@ -85,9 +85,9 @@ public final class ActivityMainBinding implements ViewBinding {
     this.nextButton = nextButton;
     this.pauseButton = pauseButton;
     this.playButton = playButton;
+    this.prevButton = prevButton;
     this.refreshButton = refreshButton;
     this.selectFolderButton = selectFolderButton;
-    this.stopButton = stopButton;
     this.trackList = trackList;
     this.trackSeekBar = trackSeekBar;
     this.trackText = trackText;
@@ -174,6 +174,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.prevButton;
+      Button prevButton = ViewBindings.findChildViewById(rootView, id);
+      if (prevButton == null) {
+        break missingId;
+      }
+
       id = R.id.refreshButton;
       Button refreshButton = ViewBindings.findChildViewById(rootView, id);
       if (refreshButton == null) {
@@ -183,12 +189,6 @@ public final class ActivityMainBinding implements ViewBinding {
       id = R.id.selectFolderButton;
       Button selectFolderButton = ViewBindings.findChildViewById(rootView, id);
       if (selectFolderButton == null) {
-        break missingId;
-      }
-
-      id = R.id.stopButton;
-      Button stopButton = ViewBindings.findChildViewById(rootView, id);
-      if (stopButton == null) {
         break missingId;
       }
 
@@ -212,7 +212,7 @@ public final class ActivityMainBinding implements ViewBinding {
 
       return new ActivityMainBinding((LinearLayout) rootView, currentTimeText, durationText,
           folderText, loadingRow, loadingSpinner, loadingText, nextButton, pauseButton, playButton,
-          refreshButton, selectFolderButton, stopButton, trackList, trackSeekBar, trackText);
+          prevButton, refreshButton, selectFolderButton, trackList, trackSeekBar, trackText);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
