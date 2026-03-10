@@ -3,6 +3,7 @@ local
 color taverner_bg
 color taverner_primary
 color taverner_secondary
+color taverner_text
 drawable ic_launcher
 id currentTimeText
 id durationText

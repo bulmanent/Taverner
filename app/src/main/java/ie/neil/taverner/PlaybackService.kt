@@ -5,6 +5,9 @@ import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.media.AudioManager
+import android.bluetooth.BluetoothA2dp
+import android.bluetooth.BluetoothProfile
+import android.os.Build
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -34,10 +37,25 @@ class PlaybackService : MediaSessionService() {
     private var loadJob: Job? = null
     private var progressPersistJob: Job? = null
 
+    private var pausedByNoisy = false
+
     private val noisyReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: android.content.Context?, intent: Intent?) {
             if (intent?.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+                pausedByNoisy = true
                 player.pause()
+            }
+        }
+    }
+
+    private val btResumeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context?, intent: Intent?) {
+            if (intent?.action == BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED) {
+                val state = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
+                if (state == BluetoothProfile.STATE_CONNECTED && pausedByNoisy && player.mediaItemCount > 0) {
+                    pausedByNoisy = false
+                    player.play()
+                }
             }
         }
     }
@@ -57,6 +75,12 @@ class PlaybackService : MediaSessionService() {
 
         player.addListener(PlayerEventListener())
         registerReceiver(noisyReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
+        val btFilter = IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(btResumeReceiver, btFilter, RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(btResumeReceiver, btFilter)
+        }
         restoreFromStore()
     }
 
@@ -70,6 +94,7 @@ class PlaybackService : MediaSessionService() {
         progressPersistJob?.cancel()
         persistNow()
         unregisterReceiver(noisyReceiver)
+        unregisterReceiver(btResumeReceiver)
         serviceScope.cancel()
         mediaSession.release()
         player.release()
@@ -157,6 +182,7 @@ class PlaybackService : MediaSessionService() {
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
+            if (isPlaying) pausedByNoisy = false
             persistNow()
             restartPeriodicPersistence()
         }

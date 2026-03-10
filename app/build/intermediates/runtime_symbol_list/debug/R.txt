@@ -2053,6 +2053,7 @@ int color switch_thumb_normal_material_light 0x7f060308
 int color taverner_bg 0x7f060309
 int color taverner_primary 0x7f06030a
 int color taverner_secondary 0x7f06030b
+int color taverner_text 0x7f06030e
 int color tooltip_background_dark 0x7f06030c
 int color tooltip_background_light 0x7f06030d
 int dimen abc_action_bar_content_inset_material 0x7f070000

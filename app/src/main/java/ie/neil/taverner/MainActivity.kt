@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             currentController.play()
         }
         binding.pauseButton.setOnClickListener { controller?.pause() }
-        binding.stopButton.setOnClickListener { controller?.stop() }
+        binding.prevButton.setOnClickListener { controller?.seekToPrevious() }
         binding.nextButton.setOnClickListener { controller?.seekToNext() }
         binding.trackSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -349,6 +349,9 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.POST_NOTIFICATIONS)
         } else {
             permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        if (Build.VERSION.SDK_INT >= 31) {
+            permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
         }
         val needsRequest = permissions.any { permission ->
             ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED

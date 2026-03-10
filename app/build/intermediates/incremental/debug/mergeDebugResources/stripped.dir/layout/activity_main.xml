@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/taverner_bg"
     tools:context=".MainActivity">
 
     <TextView
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/no_folder"
+        android:textColor="@color/taverner_text"
         android:textStyle="bold" />
 
     <TextView
@@ -19,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:textColor="@color/taverner_text"
         android:text="@string/no_track" />
 
     <SeekBar
@@ -41,12 +44,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/taverner_text"
             android:text="0:00" />
 
         <TextView
             android:id="@+id/durationText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/taverner_text"
             android:text="0:00" />
     </LinearLayout>
 
@@ -70,6 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:textColor="@color/taverner_text"
             android:text="@string/loading_tracks" />
     </LinearLayout>
 
@@ -143,6 +149,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:textColor="@color/taverner_text"
         android:text="Tracks" />
 
     <androidx.recyclerview.widget.RecyclerView
