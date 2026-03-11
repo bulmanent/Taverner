@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity() {
                 // Some providers don't grant persistable permissions; continue with runtime access.
             }
             store.saveFolder(uri)
-            store.clearTracks()
             updateFolderLabel(uri)
             currentFolderUri = uri
             val startIndex: Int
@@ -96,18 +95,11 @@ class MainActivity : AppCompatActivity() {
                 startIndex = savedState?.index ?: 0
                 startPositionMs = savedState?.position ?: 0L
             }
-            // Always set pending in case the controller isn't connected yet.
-            pendingFolderUri = uri
-            pendingStartIndex = startIndex
-            pendingStartPositionMs = startPositionMs
             loadTracks(uri, forceRefresh = true) {
-                // Cache is now freshly written. If the controller is ready, send directly;
-                // otherwise pendingFolderUri will be handled when the controller connects.
+                // Scan complete; cache is freshly written. Send to service if controller is
+                // ready, otherwise set pending so connectController picks it up.
                 val ctrl = controller
                 if (ctrl != null) {
-                    pendingFolderUri = null
-                    pendingStartIndex = 0
-                    pendingStartPositionMs = 0L
                     sendFolderToService(
                         uri = uri,
                         forceRefresh = false,
@@ -115,6 +107,10 @@ class MainActivity : AppCompatActivity() {
                         startPositionMs = startPositionMs,
                         playWhenReady = true
                     )
+                } else {
+                    pendingFolderUri = uri
+                    pendingStartIndex = startIndex
+                    pendingStartPositionMs = startPositionMs
                 }
             }
         }
@@ -390,11 +386,7 @@ class MainActivity : AppCompatActivity() {
                 binding.loadingRow.visibility = android.view.View.GONE
                 adapter.tracks = scanned
                 updateCurrentTrack()
-                if (onScanComplete != null) {
-                    onScanComplete()
-                } else if ((controller?.mediaItemCount ?: 0) == 0) {
-                    ensurePlaylistLoaded()
-                }
+                onScanComplete?.invoke()
             }
         }
     }
