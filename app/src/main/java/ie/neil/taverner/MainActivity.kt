@@ -41,8 +41,6 @@ class MainActivity : AppCompatActivity() {
     private var controllerFuture: ListenableFuture<MediaController>? = null
     private var controller: MediaController? = null
     private var pendingFolderUri: Uri? = null
-    private var pendingStartIndex: Int = 0
-    private var pendingStartPositionMs: Long = 0L
     private var currentFolderUri: Uri? = null
     private var pendingPlayIndex: Int? = null
     private var playButtonDefaultTint: ColorStateList? = null
@@ -70,14 +68,6 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
         if (uri != null) {
-            val oldUri = currentFolderUri
-            // Save playback position for the folder we're leaving.
-            oldUri?.let {
-                store.saveFolderState(it,
-                    controller?.currentMediaItemIndex ?: 0,
-                    controller?.currentPosition ?: 0L)
-            }
-            val isSameFolder = oldUri?.toString() == uri.toString()
             val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             try {
                 contentResolver.takePersistableUriPermission(uri, flags)
@@ -87,33 +77,12 @@ class MainActivity : AppCompatActivity() {
             store.saveFolder(uri)
             updateFolderLabel(uri)
             currentFolderUri = uri
-            val startIndex: Int
-            val startPositionMs: Long
-            if (isSameFolder) {
-                startIndex = controller?.currentMediaItemIndex ?: 0
-                startPositionMs = controller?.currentPosition ?: 0L
+            loadTracks(uri)  // show cached tracks; no scan
+            val ctrl = controller
+            if (ctrl != null) {
+                sendFolderToService(uri = uri, forceRefresh = false, startIndex = 0, startPositionMs = 0L, playWhenReady = false)
             } else {
-                val savedState = store.loadFolderState(uri)
-                startIndex = savedState?.index ?: 0
-                startPositionMs = savedState?.position ?: 0L
-            }
-            loadTracks(uri, forceRefresh = true) {
-                // Scan complete; cache is freshly written. Send to service if controller is
-                // ready, otherwise set pending so connectController picks it up.
-                val ctrl = controller
-                if (ctrl != null) {
-                    sendFolderToService(
-                        uri = uri,
-                        forceRefresh = false,
-                        startIndex = startIndex,
-                        startPositionMs = startPositionMs,
-                        playWhenReady = true
-                    )
-                } else {
-                    pendingFolderUri = uri
-                    pendingStartIndex = startIndex
-                    pendingStartPositionMs = startPositionMs
-                }
+                pendingFolderUri = uri
             }
         }
     }
@@ -256,23 +225,22 @@ class MainActivity : AppCompatActivity() {
             updateCurrentTrack()
             updatePlayButton(controller?.isPlaying == true)
             updateProgressUi()
+            val hadPendingFolder = pendingFolderUri != null
             pendingFolderUri?.let { pending ->
                 sendFolderToService(
                     uri = pending,
-                    forceRefresh = true,
-                    startIndex = pendingStartIndex,
-                    startPositionMs = pendingStartPositionMs,
-                    playWhenReady = true
+                    forceRefresh = false,
+                    startIndex = 0,
+                    startPositionMs = 0L,
+                    playWhenReady = false
                 )
                 pendingFolderUri = null
-                pendingStartIndex = 0
-                pendingStartPositionMs = 0L
             }
             val pendingIndex = pendingPlayIndex
             if (pendingIndex != null) {
                 playTrack(pendingIndex)
                 pendingPlayIndex = null
-            } else if (pendingFolderUri == null) {
+            } else if (!hadPendingFolder) {
                 ensurePlaylistLoaded()
             }
         }, ContextCompat.getMainExecutor(this))
