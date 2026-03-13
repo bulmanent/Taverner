@@ -97,6 +97,15 @@ class PlaybackStore(context: Context) {
         val playWhenReady: Boolean
     )
 
+    init {
+        // v2: switched from SAF URIs to MediaStore URIs — wipe the old cache once
+        // so ExoPlayer never tries to open expired SAF URIs on startup.
+        if (prefs.getInt(KEY_CACHE_VERSION, 1) < 2) {
+            clearTracks()
+            prefs.edit().putInt(KEY_CACHE_VERSION, 2).apply()
+        }
+    }
+
     companion object {
         private const val PREFS_NAME = "taverner_playback"
         private const val KEY_FOLDER_URI = "folder_uri"
@@ -105,5 +114,6 @@ class PlaybackStore(context: Context) {
         private const val KEY_PLAY_WHEN_READY = "play_when_ready"
         private const val KEY_TRACKS = "tracks_cache"
         private const val KEY_TRACKS_FOLDER = "tracks_folder"
+        private const val KEY_CACHE_VERSION = "cache_version"
     }
 }
