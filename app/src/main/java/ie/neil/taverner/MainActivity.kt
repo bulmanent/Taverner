@@ -359,6 +359,11 @@ class MainActivity : AppCompatActivity() {
                 }
             } catch (e: CancellationException) {
                 throw e  // let the coroutine cancel normally; onStop already hid the loading bar
+            } catch (e: android.os.OperationCanceledException) {
+                // CancellationSignal fired (from onStop) — hide spinner and stop cleanly
+                withContext(Dispatchers.Main) {
+                    binding.loadingRow.visibility = android.view.View.GONE
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     binding.loadingRow.visibility = android.view.View.GONE

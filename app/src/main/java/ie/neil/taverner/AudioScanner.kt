@@ -40,7 +40,8 @@ object AudioScanner {
                 projection,
                 selection,
                 selectionArgs,
-                null
+                null,
+                signal
             )?.use { cursor ->
                 val idCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
                 val nameCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
@@ -56,6 +57,8 @@ object AudioScanner {
             }
 
             tracks.sortedBy { it.first.lowercase() }.map { it.second }
+        } catch (e: android.os.OperationCanceledException) {
+            throw e
         } catch (e: Exception) {
             emptyList()
         }

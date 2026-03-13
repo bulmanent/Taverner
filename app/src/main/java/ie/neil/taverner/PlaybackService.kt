@@ -87,6 +87,7 @@ class PlaybackService : MediaSessionService() {
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession = mediaSession
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         return START_STICKY
     }
 
