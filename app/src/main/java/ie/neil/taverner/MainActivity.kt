@@ -69,12 +69,6 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
         if (uri != null) {
-            val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            try {
-                contentResolver.takePersistableUriPermission(uri, flags)
-            } catch (ex: SecurityException) {
-                // Some providers don't grant persistable permissions; continue with runtime access.
-            }
             store.saveFolder(uri)
             updateFolderLabel(uri)
             currentFolderUri = uri
