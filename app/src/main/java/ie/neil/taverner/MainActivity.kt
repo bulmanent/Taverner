@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var playButtonDefaultTint: ColorStateList? = null
     private var progressJob: Job? = null
     private var scanJob: Job? = null
+    private var scanSignal: CancellationSignal? = null
     private var isUserSeeking = false
 
     private val playerListener = object : Player.Listener {
@@ -185,6 +186,8 @@ class MainActivity : AppCompatActivity() {
         stopProgressUpdates()
         scanJob?.cancel()
         scanJob = null
+        scanSignal?.cancel()
+        scanSignal = null
         binding.loadingRow.visibility = android.view.View.GONE
         controller?.removeListener(playerListener)
         controller?.release()
@@ -330,9 +333,10 @@ class MainActivity : AppCompatActivity() {
         onScanComplete: (() -> Unit)? = null
     ) {
         scanJob?.cancel()
+        scanSignal?.cancel()
+        val signal = CancellationSignal()
+        scanSignal = signal
         scanJob = lifecycleScope.launch(Dispatchers.IO) {
-            val signal = CancellationSignal()
-            coroutineContext[Job]!!.invokeOnCompletion(onCancelling = true) { signal.cancel() }
             try {
                 val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
                 if (cached.isNotEmpty()) {
