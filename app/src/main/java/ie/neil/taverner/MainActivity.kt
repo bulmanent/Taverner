@@ -77,14 +77,12 @@ class MainActivity : AppCompatActivity() {
             store.saveFolder(uri)
             updateFolderLabel(uri)
             currentFolderUri = uri
-            // Picking a folder always re-grants SAF permission so the scan is reliable here.
-            loadTracks(uri, forceRefresh = true) {
-                val ctrl = controller
-                if (ctrl != null) {
-                    sendFolderToService(uri = uri, forceRefresh = false, startIndex = 0, startPositionMs = 0L, playWhenReady = false)
-                } else {
-                    pendingFolderUri = uri
-                }
+            loadTracks(uri)  // cache only — never scan from here
+            val ctrl = controller
+            if (ctrl != null) {
+                sendFolderToService(uri = uri, forceRefresh = false, startIndex = 0, startPositionMs = 0L, playWhenReady = false)
+            } else {
+                pendingFolderUri = uri
             }
         }
     }
@@ -334,7 +332,7 @@ class MainActivity : AppCompatActivity() {
         scanJob?.cancel()
         scanJob = lifecycleScope.launch(Dispatchers.IO) {
             val signal = CancellationSignal()
-            coroutineContext[Job]!!.invokeOnCompletion { signal.cancel() }
+            coroutineContext[Job]!!.invokeOnCompletion(onCancelling = true) { signal.cancel() }
             try {
                 val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
                 if (cached.isNotEmpty()) {
