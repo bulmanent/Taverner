@@ -2,17 +2,37 @@ package ie.neil.taverner
 
 import android.content.Context
 import android.net.Uri
-import androidx.documentfile.provider.DocumentFile
+import android.provider.DocumentsContract
 
 object AudioScanner {
     fun scan(context: Context, treeUri: Uri): List<Track> {
-        val root = DocumentFile.fromTreeUri(context, treeUri) ?: return emptyList()
-        val files = root.listFiles()
-            .filter { it.isFile && it.name != null && it.name!!.lowercase().endsWith(".mp3") }
-            .sortedBy { it.name!!.lowercase() }
+        return try {
+            val documentId = DocumentsContract.getTreeDocumentId(treeUri)
+            val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, documentId)
 
-        return files.map { file ->
-            Track(file.uri, file.name ?: "Unknown")
+            val tracks = mutableListOf<Pair<String, Track>>()
+            context.contentResolver.query(
+                childrenUri,
+                arrayOf(
+                    DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+                    DocumentsContract.Document.COLUMN_DISPLAY_NAME
+                ),
+                null, null, null
+            )?.use { cursor ->
+                val idCol = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
+                val nameCol = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+                while (cursor.moveToNext()) {
+                    val docId = cursor.getString(idCol) ?: continue
+                    val name = cursor.getString(nameCol) ?: continue
+                    if (!name.lowercase().endsWith(".mp3")) continue
+                    val fileUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId)
+                    tracks.add(name to Track(fileUri, name))
+                }
+            }
+
+            tracks.sortedBy { it.first.lowercase() }.map { it.second }
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 }
