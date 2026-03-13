@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun maybeStartPlaybackService() {
-        if (controller != null) {
+        if (controller != null || controllerFuture != null) {
             return
         }
         startPlaybackService()
@@ -204,10 +204,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun connectController() {
         val token = SessionToken(this, ComponentName(this, PlaybackService::class.java))
-        controllerFuture = MediaController.Builder(this, token).buildAsync()
-        controllerFuture?.addListener({
+        val future = MediaController.Builder(this, token).buildAsync()
+        controllerFuture = future
+        future.addListener({
             controller = try {
-                controllerFuture?.get()
+                future.get()
             } catch (ex: Exception) {
                 null
             }
