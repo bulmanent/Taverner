@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
@@ -266,7 +265,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateFolderLabel(uri: Uri) {
-        val name = DocumentFile.fromTreeUri(this, uri)?.name ?: uri.lastPathSegment ?: "Unknown"
+        // Derive name from the URI path without any ContentProvider call (avoids main-thread IO).
+        // SAF tree URIs encode the path as "primary:Folder/Subfolder" in the last path segment.
+        val segment = uri.lastPathSegment ?: ""
+        val name = segment.substringAfterLast(':').substringAfterLast('/').ifEmpty { segment.ifEmpty { "Unknown" } }
         binding.folderText.text = name
     }
 
@@ -343,11 +345,10 @@ class MainActivity : AppCompatActivity() {
                         updateCurrentTrack()
                     }
                     if (!forceRefresh) return@launch
-                } else if (!forceRefresh) {
-                    // No cache on startup — don't scan automatically.
-                    // The user can press Refresh to scan when ready.
-                    return@launch
-                } else {
+                }
+                // Only show the loading spinner for an explicit Refresh; on empty cache at startup
+                // the scan runs silently in the background so the list populates without freezing.
+                if (forceRefresh) {
                     withContext(Dispatchers.Main) {
                         binding.loadingRow.visibility = android.view.View.VISIBLE
                     }

@@ -1,1 +1,1 @@
-÷mãkægìgÈnîmÖmÓjúkûk
+÷mãkægìgÈnîmÖmÓjúkûkÇk
