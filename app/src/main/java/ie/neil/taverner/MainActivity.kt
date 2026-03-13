@@ -77,12 +77,14 @@ class MainActivity : AppCompatActivity() {
             store.saveFolder(uri)
             updateFolderLabel(uri)
             currentFolderUri = uri
-            loadTracks(uri)  // show cached tracks; no scan
-            val ctrl = controller
-            if (ctrl != null) {
-                sendFolderToService(uri = uri, forceRefresh = false, startIndex = 0, startPositionMs = 0L, playWhenReady = false)
-            } else {
-                pendingFolderUri = uri
+            // Picking a folder always re-grants SAF permission so the scan is reliable here.
+            loadTracks(uri, forceRefresh = true) {
+                val ctrl = controller
+                if (ctrl != null) {
+                    sendFolderToService(uri = uri, forceRefresh = false, startIndex = 0, startPositionMs = 0L, playWhenReady = false)
+                } else {
+                    pendingFolderUri = uri
+                }
             }
         }
     }
