@@ -80,10 +80,10 @@ class MainActivity : AppCompatActivity() {
             currentFolderUri = uri
             loadTracks(uri)  // cache only — never scan from here
             val ctrl = controller
-            if (ctrl != null) {
-                sendFolderToService(uri = uri, forceRefresh = false, startIndex = 0, startPositionMs = 0L, playWhenReady = false)
-            } else {
-                pendingFolderUri = uri
+            when {
+                ctrl == null -> pendingFolderUri = uri
+                ctrl.mediaItemCount == 0 -> sendFolderToService(uri = uri, forceRefresh = false, startIndex = 0, startPositionMs = 0L, playWhenReady = false)
+                // service already has a working playlist — don't disturb it
             }
         }
     }
