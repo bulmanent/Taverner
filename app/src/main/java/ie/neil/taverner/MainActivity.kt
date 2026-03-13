@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.common.util.concurrent.ListenableFuture
 import ie.neil.taverner.databinding.ActivityMainBinding
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var pendingPlayIndex: Int? = null
     private var playButtonDefaultTint: ColorStateList? = null
     private var progressJob: Job? = null
+    private var scanJob: Job? = null
     private var isUserSeeking = false
 
     private val playerListener = object : Player.Listener {
@@ -219,6 +221,9 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         stopProgressUpdates()
+        scanJob?.cancel()
+        scanJob = null
+        binding.loadingRow.visibility = android.view.View.GONE
         controller?.removeListener(playerListener)
         controller?.release()
         controller = null
@@ -360,33 +365,42 @@ class MainActivity : AppCompatActivity() {
         forceRefresh: Boolean = false,
         onScanComplete: (() -> Unit)? = null
     ) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
-            if (cached.isNotEmpty()) {
-                withContext(Dispatchers.Main) {
-                    adapter.tracks = cached
-                    updateCurrentTrack()
+        scanJob?.cancel()
+        scanJob = lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
+                if (cached.isNotEmpty()) {
+                    withContext(Dispatchers.Main) {
+                        adapter.tracks = cached
+                        updateCurrentTrack()
+                    }
+                    if (!forceRefresh) return@launch
+                } else if (!forceRefresh) {
+                    // No cache on startup — don't scan automatically.
+                    // The user can press Refresh to scan when ready.
+                    return@launch
+                } else {
+                    withContext(Dispatchers.Main) {
+                        binding.loadingRow.visibility = android.view.View.VISIBLE
+                    }
                 }
-                if (!forceRefresh) return@launch
-            } else if (!forceRefresh) {
-                // No cache on startup — don't scan automatically.
-                // The user can press Refresh to scan when ready.
-                return@launch
-            } else {
-                withContext(Dispatchers.Main) {
-                    binding.loadingRow.visibility = android.view.View.VISIBLE
-                }
-            }
 
-            val scanned = AudioScanner.scan(this@MainActivity, uri)
-            if (scanned.isNotEmpty()) {
-                store.saveTracks(uri, scanned)
-            }
-            withContext(Dispatchers.Main) {
-                binding.loadingRow.visibility = android.view.View.GONE
-                adapter.tracks = scanned
-                updateCurrentTrack()
-                onScanComplete?.invoke()
+                val scanned = AudioScanner.scan(this@MainActivity, uri)
+                if (scanned.isNotEmpty()) {
+                    store.saveTracks(uri, scanned)
+                }
+                withContext(Dispatchers.Main) {
+                    binding.loadingRow.visibility = android.view.View.GONE
+                    adapter.tracks = scanned
+                    updateCurrentTrack()
+                    onScanComplete?.invoke()
+                }
+            } catch (e: CancellationException) {
+                throw e  // let the coroutine cancel normally; onStop already hid the loading bar
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    binding.loadingRow.visibility = android.view.View.GONE
+                }
             }
         }
     }
