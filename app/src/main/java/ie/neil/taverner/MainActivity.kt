@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startPlaybackService() {
         val intent = Intent(this, PlaybackService::class.java)
-        ContextCompat.startForegroundService(this, intent)
+        startService(intent)
     }
 
     private fun maybeStartPlaybackService() {
