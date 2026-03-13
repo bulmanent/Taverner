@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.common.util.concurrent.ListenableFuture
 import ie.neil.taverner.databinding.ActivityMainBinding
+import android.os.CancellationSignal
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -104,25 +105,18 @@ class MainActivity : AppCompatActivity() {
         binding.selectFolderButton.setOnClickListener { openTreeLauncher.launch(null) }
         binding.refreshButton.setOnClickListener {
             currentFolderUri?.let { uri ->
-                AlertDialog.Builder(this)
-                    .setTitle("Refresh")
-                    .setMessage("Rescan folder for new or removed tracks?")
-                    .setPositiveButton("Yes") { _, _ ->
-                        val index = controller?.currentMediaItemIndex ?: 0
-                        val position = controller?.currentPosition ?: 0L
-                        val wasPlaying = controller?.isPlaying == true
-                        loadTracks(uri, forceRefresh = true) {
-                            sendFolderToService(
-                                uri = uri,
-                                forceRefresh = false,
-                                startIndex = index,
-                                startPositionMs = position,
-                                playWhenReady = wasPlaying
-                            )
-                        }
-                    }
-                    .setNegativeButton("No", null)
-                    .show()
+                val index = controller?.currentMediaItemIndex ?: 0
+                val position = controller?.currentPosition ?: 0L
+                val wasPlaying = controller?.isPlaying == true
+                loadTracks(uri, forceRefresh = true) {
+                    sendFolderToService(
+                        uri = uri,
+                        forceRefresh = false,
+                        startIndex = index,
+                        startPositionMs = position,
+                        playWhenReady = wasPlaying
+                    )
+                }
             }
         }
         binding.playButton.setOnClickListener {
@@ -337,6 +331,8 @@ class MainActivity : AppCompatActivity() {
     ) {
         scanJob?.cancel()
         scanJob = lifecycleScope.launch(Dispatchers.IO) {
+            val signal = CancellationSignal()
+            coroutineContext[Job]!!.invokeOnCompletion { signal.cancel() }
             try {
                 val cached = if (forceRefresh) emptyList() else store.loadTracks(uri)
                 if (cached.isNotEmpty()) {
@@ -345,16 +341,15 @@ class MainActivity : AppCompatActivity() {
                         updateCurrentTrack()
                     }
                     if (!forceRefresh) return@launch
-                }
-                // Only show the loading spinner for an explicit Refresh; on empty cache at startup
-                // the scan runs silently in the background so the list populates without freezing.
-                if (forceRefresh) {
+                } else if (!forceRefresh) {
+                    return@launch  // no cache and no explicit Refresh — do nothing
+                } else {
                     withContext(Dispatchers.Main) {
                         binding.loadingRow.visibility = android.view.View.VISIBLE
                     }
                 }
 
-                val scanned = AudioScanner.scan(this@MainActivity, uri)
+                val scanned = AudioScanner.scan(this@MainActivity, uri, signal)
                 if (scanned.isNotEmpty()) {
                     store.saveTracks(uri, scanned)
                 }
