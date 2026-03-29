@@ -348,6 +348,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                if (forceRefresh) {
+                    AudioScanner.triggerMediaScan(this@MainActivity, uri)
+                }
                 val scanned = AudioScanner.scan(this@MainActivity, uri, signal)
                 if (scanned.isNotEmpty()) {
                     store.saveTracks(uri, scanned)
